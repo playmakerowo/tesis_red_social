@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block css %}
+<!-- JS CREAR EVENTO -->
+<LINK REL=StyleSheet HREF="{% static '/js/crearEvento.js" TYPE="text/js' %}" MEDIA=screen>
+
+
+{% endblock css %}
+
+{% block contenido %}
+<section class="p-2 dark:bg-gray-900 flex justify-center items-center min-h-screen my-8 scale-up-center">
+    <div
+        class="w-full max-w-xl p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700">
+
+        <div class="py-4 px-2 mx-auto max-w-2xl">
+            <p class="m-6 p-0 flex justify-center items-center text-4xl font-bold text-gray-900 dark:text-white">
+                Crear Evento</p>
+        </div>
+        <p class="font-semibold text-sm m-6 p-4 pt-0 pb-4 flex   text-1xl text-gray-900 dark:text-white text-justify">
+            Ten en cuenta que...<button class="pl-2" data-popover-target="popover-description"
+                data-popover-placement="bottom-start" type="button">
+                <svg class="w-4 h-4 ms-2 text-gray-400 hover:text-gray-500 " aria-hidden="true" fill="currentColor"
+                    viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                </svg><span class="sr-only">Show information</span></button></p>
+        <div data-popover id="popover-description" role="tooltip"
+            class="absolute z-10 invisible inline-block text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 w-96 dark:text-gray-400 dark:bg-gray-800 dark:border-gray-600">
+            <div class="grid grid-cols-8">
+                <div class="col-span-6 p-4">
+                    <h3 class="font-semibold text-base text-gray-900 dark:text-white">Información</h3>
+                    <li>Al momento de crear tu evento, primero debera ser aprobado por el administrador, luego de su
+                        aprobacion sera visible para todos (De momento solo podras verla en tu perfil).</li>
+                    <li>
+                        Los participantes del evento los debes agregar posterior a crear dicho evento, desde tu perfil.
+                    </li>
+                    <li>Recuerda que el evento creado, se archivara una vez haya superado el tiempo estipulado, por lo cual no aparecera en el inicio de pagina.</li>
+                </div>
+            </div>
+            <div data-popper-arrow></div>
+        </div>
+        <form class="formulario" action="{% url 'CREA_EVE' user.id %}" method="post">
+            {% csrf_token %}
+            <div class="m-4 p-0">
+                <!-- Nombre del evento-->
+                <div class="sm:col-span-2">
+                    <label for="txtTitulo" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nombre
+                        del Evento</label>
+                    <input type="text" name="txtTitulo" id="txtTitulo"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                        placeholder="Ingrese nombre del evento" required maxlength="100">
+                    <span id="charCountTitulo" class="text-xs text-gray-400 dark:text-gray-300">0 / 100</span>
+                </div>
+
+                <!-- Área de texto "Descripcion del evento" -->
+                <div class="sm:col-span-2">
+                    <label for="txtDesc"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Descripción</label>
+                    <textarea id="txtDesc" name="txtDesc" rows="4"
+                        class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        placeholder="Ingrese la descripcion del evento" maxlength="1500"></textarea>
+                    <span id="charCountDesc" class="text-xs text-gray-400 dark:text-gray-300">0 / 1500</span>
+                </div>
+                <!-- Input de fechas -->
+                <div class="sm:col-span-2">
+                    <label for="price" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Fechas de la encuesta</label>
+                    <div date-rangepicker class="flex justify-center flex-col sm:flex-row items-center">
+                        <p class="ml-4 mr-4 sm:mr-4">Desde</p>
+                        <div class="flex items-center sm:mb-0 sm:mr-4">
+                            <input type="date" id="fechaI" name="fechaI"
+                                class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                required />
+                        </div>
+                        <p class="ml-4 mr-4 sm:mb-0">Hasta</p>
+                        <div class="flex items-center sm:mb-0 sm:mr-4">
+                            <input type="date" id="fechaF" name="fechaF"
+                                class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                                required />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Boton para agregar evento -->
+            <div class="flex justify-center items-center mt-4 space-x-3 md:mt-6">
+                <button type="button" onclick="crear('{{user.id}}')"
+                    class="text-white justify-cente flex items-center bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">
+                    Crear
+                </button>
+                <a href="{% url 'HOME' %}">
+                    <button type="button"
+                        class="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">Cancelar</button>
+                </a>
+            </div>
+        </form>
+        {% if messages %}
+        <ul class="messages pt-4">
+            {% for message in messages %}
+            <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+            <input type="text" id="mensaje" value="{{ message }}" hidden disabled>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
+    <script type="text/javascript" src="{% static 'js/contador_evento.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/alerta_confirmar_crear_editar.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/crear_evento.js' %}"></script>
+</section>
+{% endblock contenido %}

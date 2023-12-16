@@ -1,0 +1,218 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block css %}
+<!-- JS CREAR EVENTO -->
+<LINK REL=StyleSheet HREF="{% static '/js/crearEvento.js" TYPE="text/js' %}" MEDIA=screen>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/datepicker.min.js"></script>
+
+{% endblock css %}
+
+{% block contenido %}
+<section class="p-2 dark:bg-gray-900 flex justify-center items-center min-h-screen my-8 scale-up-center">
+    <div
+        class="w-full max-w-xl p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700">
+
+        <div class="py-4 px-2 mx-auto max-w-2xl">
+            <p class="m-6 p-0 flex justify-center items-center text-4xl font-bold text-gray-900 dark:text-white">
+                Editar Evento</p>
+        </div>
+        <p class="m-6 p-0 mb-4 flex justify-center items-center text-1xl text-gray-900 dark:text-white">
+            Aqui puedes editar los campos de tu evento.</p>
+        {% for e in eventos %}
+        <form class="formulario" action="{% url 'EDI_EVE' e.7 %}" method="post">
+            {% csrf_token %}
+            {% if e.6 == user.id %}
+            <!-- Nombre del evento-->
+            <div class="sm:col-span-2">
+                <label for="txtTitulo" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nombre
+                    del Evento</label>
+                <input type="text" name="txtTitulo" id="txtTitulo"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                    placeholder="Ingrese nombre evento" value="{{e.0}}" required maxlength="100">
+                <span id="charCountTitulo" class="text-xs text-gray-400 dark:text-gray-300">0 / 100</span>
+            </div>
+            <!-- Descripcion del evento  -->
+            <div class="sm:col-span-2">
+                <label for="description"
+                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Descripcion</label>
+                <input id="txtDesc" rows="8" name="txtDesc"
+                    class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                    placeholder="Ingrese la descripcion del evento " value="{{e.3}}" required maxlength="1500">
+                <span id="charCountDesc" class="text-xs text-gray-400 dark:text-gray-300">0 / 1500</span>
+            </div>
+            <!-- Input de fechas -->
+
+            <label for="price" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Fecha
+                del
+                evento</label>
+            <div date-rangepicker class="flex items-center">
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                        <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                            <path
+                                d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
+                        </svg>
+                    </div>
+                    <input name="fechaI" type="text" value="{{e.4}}"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        placeholder="Inicio">
+                </div>
+                <span class="mx-4 text-gray-500">Hasta</span>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                        <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                            <path
+                                d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
+                        </svg>
+                    </div>
+                    <input name="fechaF" type="text" value="{{e.5}}"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        placeholder="Fin">
+                </div>
+            </div>
+            <hr class="h-px my-6 bg-gray-200 border-0 dark:bg-gray-700">
+            <div class="relative z-0 w-full mb-2 group flex items-center justify-center">
+                <p class="text-xl font-semibold dark:text-white items-center">Aqui agrega tus participantes</p>
+                <button class="pl-2 flex items-center" data-popover-target="popover-description" data-popover-placement="bottom-start" type="button">
+                    <span class="mr-1"> <!-- Ajusta el margen derecho según tus necesidades -->
+                        <svg class="w-4 h-4 text-gray-400 hover:text-gray-500" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                        </svg>
+                    </span>
+                    <span class="sr-only">Show information</span>
+                </button>
+            </div>
+            <div data-popover id="popover-description" role="tooltip"
+            class="absolute z-10 invisible inline-block text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 w-96 dark:text-gray-400 dark:bg-gray-800 dark:border-gray-600">
+            <div class="grid grid-cols-8">
+                <div class="col-span-6 p-4">
+                    <h3 class="font-semibold text-base text-gray-900 dark:text-white">Información</h3>
+                    <li>Participantes por tipo, podras agregar todos los participantes a la vez por tipo de usuario.</li>
+                    <li>
+                        Participantes adicional, podras agregar individualmente al usuario que quieras.
+                    </li>
+                    <li>Lo usuarios que se agreguen se mostraran en el recuadro inferior (Participantes actuales), en donde ademas podras buscar individualmente a algun usuario por su nombre o tipo de usuario.</li>
+                    <li>Al hacer click sobre alguno de los participantes actuales, seras enviado al perfil de dicho usuario.</li>
+                </div>
+            </div>
+            <div data-popper-arrow></div>
+        </div>
+            <div class="sm:col-span-2 ">
+                <label class="block mb-2 text-sm font-medium dark:text-white ">Participantes por tipo</label>
+                <select id="" name="tipos"
+                    class="blockp-2 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                    <option value="" disabled selected>Selecciona un tipo usuarios</option>
+                    {% for tipo in tipos_usuario %}
+
+                    <option value="{{ tipo.0 }}">{{tipo.1}}</option>
+
+                    {% endfor %}
+                </select>
+                <button type="submit" name="accion" value="agregar_tipo"
+                    class="flex inline-flex items-center px-4 py-1 text-sm font-medium text-white bg-blue-700 rounded-lg right-2 bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium"><svg
+                        class="w-3 h-3 mr-1.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                        viewBox="0 0 20 18">
+                        <path
+                            d="M6.5 9a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9ZM8 10H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5Zm11-3h-2V5a1 1 0 0 0-2 0v2h-2a1 1 0 1 0 0 2h2v2a1 1 0 0 0 2 0V9h2a1 1 0 1 0 0-2Z" />
+                    </svg>Añadir</button>
+                <!--USUARIOS-->
+            </div>
+            <input type="text" name="id" value="{{eve.0}}" style="display: none;">
+            <label for="name" class="block mb-2 text-sm font-medium dark:text-white mt-2">Agregar
+                participante adicional</label>
+            <div class="relative">
+                <select id="select_usuarios" name="usuarios" class="select2 w-full lg:w-auto">
+                    <option value="" disabled selected>Selecciona un usuario</option>
+                    {% for user in usuarios %}
+
+                    <option value="{{ user.0 }}">{{user.2}} {{user.3}} ~ {{user.4}}</option>
+
+                    {% endfor %}
+                </select>
+
+                <button type="submit" name="accion" value="agregar"
+                    class="flex inline-flex items-center px-4 py-1 text-sm font-medium text-white bg-blue-700 rounded-lg right-2 bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium"><svg
+                        class="w-3 h-3 mr-1.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                        viewBox="0 0 20 18">
+                        <path
+                            d="M6.5 9a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9ZM8 10H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5Zm11-3h-2V5a1 1 0 0 0-2 0v2h-2a1 1 0 1 0 0 2h2v2a1 1 0 0 0 2 0V9h2a1 1 0 1 0 0-2Z" />
+                    </svg>Añadir</button>
+            </div>
+            <!--Participantes-->
+            <div class="relative z-0 w-full mb-2 group">
+                <p class="text-m font-base dark:text-white mt-4">Participantes actuales</p>
+            </div>
+            <div class="bg-gray-900 text-gray-900 bg-gray-200 font-medium rounded-lg px-5 text-center mt-2">
+                <div class="w-auto h-14 bg-gray-900 rounded-t-lg flex justify-center items-center">
+                    <div class="absolute z-10 w-auto">
+                        <input type="text" name="buscador" id="buscador" placeholder="Buscar"
+                            class="border-gray-300 rounded-full m-2">
+                    </div>
+                </div>
+                <div class=" rounded-b-lg" style="height: 400px; max-height: 400px; overflow-y: auto;">
+                    <!--Buscar en participantes-->
+
+                    <div class="participant-container">
+                        <!-- Lista de participantes -->
+                        <ul>
+                            {% for par in participantes %}
+                            <div class="m-2 flex items-center bg-gray-800 rounded-xl hover:bg-gray-800">
+                                <li class="participante-lista flex item py-2 justify-between relative w-full ">
+                                    <!-- Añadido 'flex items-center' para alinear verticalmente -->
+                                    <a href="{% url 'PER_USU' par.4 %}">
+                                        <button type="button"
+                                            class="text-white m-2 font-medium rounded-lg text-sm px-5 py-1.5 text-center mr-2 mb-2">{{par.2}}
+                                            {{ par.3 }} ~ {{ par.5 }}</button>
+                                    </a>
+                    
+                                    <!-- Utilizado para ocupar el espacio restante y empujar el botón al extremo derecho -->
+                    
+                                    <button type="button" accion="eliminar"
+                                    class="text-white m-2 bg-gradient-to-r from-red-400 to-red-600 font-medium rounded-lg px-2 py-1 text-center delete-participante-btn flex-shrink-0"
+                                    data-participante-id="{{ par.4 }}" data-evento-id="{{ e.7 }}">
+                                    <i class="fa fa-trash" aria-hidden="true"></i>
+                                </button>
+                    
+                                </li>
+                                
+                            </div>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    
+                    
+                </div>
+            </div>
+            <div class="flex justify-center items-center mt-4 space-x-3 md:mt-6">
+                <button type="button" onclick="editar('{{e.7}}')"
+                    class="text-white justify-cente flex items-center bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">
+                    Aceptar</button>
+                <a href="{% url 'HOME' %}">
+                    <button type="button"
+                        class="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">Cancelar</button>
+                </a>
+            </div>
+
+            {% if messages %}
+            <ul class="messages pt-4">
+                {% for message in messages %}
+                <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+                <input type="text" id="mensaje" value="{{ message }}" hidden disabled>
+                {% endfor %}
+            </ul>
+
+            {% endif %}
+    </div>
+    {% endif %}
+    </form>
+    {% endfor %}
+    </div>
+    </div>
+    <script type="text/javascript" src="{% static 'js/contador_evento.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/alerta_confirmar_crear_editar.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/editar_evento.js' %}"></script>
+</section>
+{% endblock contenido %}

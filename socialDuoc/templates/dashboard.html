@@ -1,0 +1,278 @@
+{% extends "base_admin.html" %}
+{% load static %}
+
+{% block titulo_admin %}
+
+<title>DashBoard</title>
+
+{% endblock titulo_admin %}
+
+{% block contenido_admin %}
+
+<div class="p-4 sm:ml-64">
+    <div>
+        <!--GRAFICOS 1,2,3,4 -->
+        <div class="max-w-full w-full grid lg:grid-cols-2 md:grid-cols-1 sm:grid-cols-1">
+            <!--GRAFICO 1 -->
+            <div class="rounded-lg max-w-full w-full flex flex-wrap justify-center gap-4 ">
+                <!-- Primer gráfico -->
+                <div class="w-full bg-white rounded-lg grafico-card m-2">
+                    <div class="shadow dark:bg-gray-800 p-4 md:p-6 m-2">
+                        <div class="flex pb-4 mb-4">
+                            <div class="w-12 h-12 rounded-lg bg-gray-100 dark:bg-gray-700 flex items-center justify-center mr-3">
+                                <svg class="w-6 h-6 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                                    xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 19">
+                                    <path
+                                        d="M14.5 0A3.987 3.987 0 0 0 11 2.1a4.977 4.977 0 0 1 3.9 5.858A3.989 3.989 0 0 0 14.5 0ZM9 13h2a4 4 0 0 1 4 4v2H5v-2a4 4 0 0 1 4-4Z" />
+                                    <path
+                                        d="M5 19h10v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2ZM5 7a5.008 5.008 0 0 1 4-4.9 3.988 3.988 0 1 0-3.9 5.859A4.974 4.974 0 0 1 5 7Zm5 3a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm5-1h-.424a5.016 5.016 0 0 1-1.942 2.232A6.007 6.007 0 0 1 17 17h2a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5ZM5.424 9H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h2a6.007 6.007 0 0 1 4.366-5.768A5.016 5.016 0 0 1 5.424 9Z" />
+                                </svg>
+                            </div>
+                        <div>
+                            <h5 class="leading-none text-2xl font-bold text-gray-900 dark:text-white pb-1"
+                                id="id_total_titulo">
+                            </h5>
+                            <p class="text-sm font-normal text-gray-500 dark:text-gray-400" id="id_titulo_ult_semana">
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div id="column-chart"></div>
+            </div>
+            <!-- Fin del primer gráfico -->
+            </div>
+            <!-- GRAFICO 2-->
+            <div class="rounded-lg max-w-full w-full flex flex-wrap justify-center gap-4">
+                <!-- segundo gráfico -->
+                <div class="w-full bg-white rounded-lg grafico-card m-2">
+                    <div class="w-full shadow dark:bg-gray-800 p-4 md:p-6 m-2">
+                        <div class="flex pb-4 mb-4">
+                            <div class="w-12 h-12 rounded-lg bg-gray-100 dark:bg-gray-700 flex items-center justify-center mr-3">
+                                <svg class="w-6 h-6 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                                    xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 19">
+                                    <path
+                                        d="M14.5 0A3.987 3.987 0 0 0 11 2.1a4.977 4.977 0 0 1 3.9 5.858A3.989 3.989 0 0 0 14.5 0ZM9 13h2a4 4 0 0 1 4 4v2H5v-2a4 4 0 0 1 4-4Z" />
+                                    <path
+                                        d="M5 19h10v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2ZM5 7a5.008 5.008 0 0 1 4-4.9 3.988 3.988 0 1 0-3.9 5.859A4.974 4.974 0 0 1 5 7Zm5 3a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm5-1h-.424a5.016 5.016 0 0 1-1.942 2.232A6.007 6.007 0 0 1 17 17h2a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5ZM5.424 9H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h2a6.007 6.007 0 0 1 4.366-5.768A5.016 5.016 0 0 1 5.424 9Z" />
+                                </svg>
+                            </div>
+                            <div>
+                                <h5 class="leading-none text-2xl font-bold text-gray-900 dark:text-white pb-1"
+                                    id="id_total_tituloE">
+                                </h5>
+                                <p class="text-sm font-normal text-gray-500 dark:text-gray-400" id="id_titulo_ult_semanaE">
+                                </p>
+                            </div>
+                        </div>
+                        <div id="column-chart-2"></div>
+                    </div>
+                </div>
+                <!-- FIN segundo gráfico -->
+            </div>
+            <!-- GRAFICO 3-->
+            <div class="rounded-lg max-w-full w-full flex flex-wrap justify-center gap-4">
+                <!-- tercer gráfico -->
+                <div class="w-full bg-white rounded-lg grafico-card m-2">
+                    <div class="shadow dark:bg-gray-800 p-4 md:p-6 m-2">
+                        <div class="flex pb-4 mb-4">
+                            <div class="w-12 h-12 rounded-lg bg-gray-100 dark:bg-gray-700 flex items-center justify-center mr-3">
+                                    <svg class="w-6 h-6 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                                        xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 19">
+                                        <path
+                                            d="M14.5 0A3.987 3.987 0 0 0 11 2.1a4.977 4.977 0 0 1 3.9 5.858A3.989 3.989 0 0 0 14.5 0ZM9 13h2a4 4 0 0 1 4 4v2H5v-2a4 4 0 0 1 4-4Z" />
+                                        <path
+                                            d="M5 19h10v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2ZM5 7a5.008 5.008 0 0 1 4-4.9 3.988 3.988 0 1 0-3.9 5.859A4.974 4.974 0 0 1 5 7Zm5 3a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm5-1h-.424a5.016 5.016 0 0 1-1.942 2.232A6.007 6.007 0 0 1 17 17h2a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5ZM5.424 9H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h2a6.007 6.007 0 0 1 4.366-5.768A5.016 5.016 0 0 1 5.424 9Z" />
+                                    </svg>
+                                </div>
+                            <div>
+                                <h5 class="leading-none text-2xl font-bold text-gray-900 dark:text-white pb-1"
+                                    id="id_total_tituloEv">
+                                </h5>
+                                <p class="text-sm font-normal text-gray-500 dark:text-gray-400" id="id_titulo_ult_semanaEv">
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="column-chart-3"></div>
+                </div>
+                <!-- Fin del terccer gráfico -->
+            </div>
+            <!-- GRAFICO 4-->
+            <div class="rounded-lg max-w-full w-full flex flex-wrap justify-center gap-4">
+                <div class="w-full bg-white rounded-lg grafico-card m-2">
+                    <div class="shadow dark:bg-gray-800 p-4 md:p-6 m-2">
+                        <div class="flex pb-4 mb-4">
+                            <div class="w-12 h-12 rounded-lg bg-gray-100 dark:bg-gray-700 flex items-center justify-center mr-3">
+                                    <svg class="w-6 h-6 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                                        xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 19">
+                                        <path
+                                            d="M14.5 0A3.987 3.987 0 0 0 11 2.1a4.977 4.977 0 0 1 3.9 5.858A3.989 3.989 0 0 0 14.5 0ZM9 13h2a4 4 0 0 1 4 4v2H5v-2a4 4 0 0 1 4-4Z" />
+                                        <path
+                                            d="M5 19h10v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2ZM5 7a5.008 5.008 0 0 1 4-4.9 3.988 3.988 0 1 0-3.9 5.859A4.974 4.974 0 0 1 5 7Zm5 3a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm5-1h-.424a5.016 5.016 0 0 1-1.942 2.232A6.007 6.007 0 0 1 17 17h2a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5ZM5.424 9H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h2a6.007 6.007 0 0 1 4.366-5.768A5.016 5.016 0 0 1 5.424 9Z" />
+                                    </svg>
+                                </div>
+                            <div>
+                            <div class="flex items-center justify-center">
+                                <h5 class="text-xl font-bold leading-none text-gray-900 dark:text-white mr-1">
+                                    ALUMNOS
+                                    POR
+                                    CARRERA
+                                </h5>
+                            </div>
+                        </div>
+                    </div>
+                    <div
+                        class="grid grid-cols-1 items-center border-gray-200 border-t dark:border-gray-700 justify-between mt-2">
+                        <!-- AQUI SE LLAMA AL GRAFICO -->
+                        <div class="py-8" id="pie-chart"></div>
+                    </div>
+                </div>
+
+                <!-- Fin del segundo gráfico -->
+            </div>
+        </div>
+    <!-- GRAFICO 5  -->
+    <div class="flex items-center justify-center">
+        <div class="max-w-full w-full bg-white rounded-lg shadow dark:bg-gray-800 p-4 md:p-6 m-2 w-40 h-40 grafico-card m-2 ">
+            <div class="flex justify-between pb-4 mb-4 border-b border-gray-200 dark:border-gray-700 p-2">
+                <div class="flex items-center ">
+                    <div
+                        class="w-12 h-12 rounded-lg bg-gray-100 dark:bg-gray-700 flex items-center justify-center mr-3 ">
+                        <svg class="w-6 h-6 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 19">
+                            <path
+                                d="M14.5 0A3.987 3.987 0 0 0 11 2.1a4.977 4.977 0 0 1 3.9 5.858A3.989 3.989 0 0 0 14.5 0ZM9 13h2a4 4 0 0 1 4 4v2H5v-2a4 4 0 0 1 4-4Z" />
+                            <path
+                                d="M5 19h10v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2ZM5 7a5.008 5.008 0 0 1 4-4.9 3.988 3.988 0 1 0-3.9 5.859A4.974 4.974 0 0 1 5 7Zm5 3a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm5-1h-.424a5.016 5.016 0 0 1-1.942 2.232A6.007 6.007 0 0 1 17 17h2a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5ZM5.424 9H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h2a6.007 6.007 0 0 1 4.366-5.768A5.016 5.016 0 0 1 5.424 9Z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h5 class="leading-none text-2xl font-bold text-gray-900 dark:text-white pb-1">Publicaciones
+                            en
+                            el total de semanas
+                        </h5>
+                    </div>
+                </div>
+            </div>
+            <div id="area-chart"></div>
+
+        </div>
+    </div>
+    <!-- GRAFICO 6  -->
+    <div class="flex items-center justify-center">
+        <div
+            class="max-w-full w-full bg-white rounded-lg shadow dark:bg-gray-800 p-4 md:p-6 m-2 w-40 h-40 grafico-card m-2">
+            <div class="flex justify-between pb-4 mb-4 border-b border-gray-200 dark:border-gray-700 p-2">
+                <div class="flex items-center">
+                    <div
+                        class="w-12 h-12 rounded-lg bg-gray-100 dark:bg-gray-700 flex items-center justify-center mr-3">
+                        <svg class="w-6 h-6 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 19">
+                            <path
+                                d="M14.5 0A3.987 3.987 0 0 0 11 2.1a4.977 4.977 0 0 1 3.9 5.858A3.989 3.989 0 0 0 14.5 0ZM9 13h2a4 4 0 0 1 4 4v2H5v-2a4 4 0 0 1 4-4Z" />
+                            <path
+                                d="M5 19h10v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2ZM5 7a5.008 5.008 0 0 1 4-4.9 3.988 3.988 0 1 0-3.9 5.859A4.974 4.974 0 0 1 5 7Zm5 3a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm5-1h-.424a5.016 5.016 0 0 1-1.942 2.232A6.007 6.007 0 0 1 17 17h2a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5ZM5.424 9H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h2a6.007 6.007 0 0 1 4.366-5.768A5.016 5.016 0 0 1 5.424 9Z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h5 class="leading-none text-2xl font-bold text-gray-900 dark:text-white pb-1">Encuestas en
+                            el
+                            total de semanas
+                        </h5>
+                    </div>
+                </div>
+            </div>
+            <div id="area-chart-2"></div>
+
+        </div>
+    </div>
+    <!-- GRAFICO 7  -->
+    <div class="flex items-center justify-center">
+        <div
+            class="max-w-full w-full bg-white rounded-lg shadow dark:bg-gray-800 p-4 md:p-6 m-2 w-40 h-40 grafico-card m-2">
+            <div class="flex justify-between pb-4 mb-4 border-b border-gray-200 dark:border-gray-700 p-2">
+                <div class="flex items-center">
+                    <div
+                        class="w-12 h-12 rounded-lg bg-gray-100 dark:bg-gray-700 flex items-center justify-center mr-3">
+                        <svg class="w-6 h-6 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 19">
+                            <path
+                                d="M14.5 0A3.987 3.987 0 0 0 11 2.1a4.977 4.977 0 0 1 3.9 5.858A3.989 3.989 0 0 0 14.5 0ZM9 13h2a4 4 0 0 1 4 4v2H5v-2a4 4 0 0 1 4-4Z" />
+                            <path
+                                d="M5 19h10v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2ZM5 7a5.008 5.008 0 0 1 4-4.9 3.988 3.988 0 1 0-3.9 5.859A4.974 4.974 0 0 1 5 7Zm5 3a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm5-1h-.424a5.016 5.016 0 0 1-1.942 2.232A6.007 6.007 0 0 1 17 17h2a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5ZM5.424 9H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h2a6.007 6.007 0 0 1 4.366-5.768A5.016 5.016 0 0 1 5.424 9Z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h5 class="leading-none text-2xl font-bold text-gray-900 dark:text-white pb-1">Eventos en el
+                            total de semanas
+                        </h5>
+                    </div>
+                </div>
+            </div>
+            <div id="area-chart-3"></div>
+        </div>
+    </div>
+</div>
+
+
+</div>
+
+{% endblock contenido_admin %}
+
+{% block js_admin %}
+<script>
+    //se envian las carreras
+    var carrerasData = {{ carreras_data| safe }};
+    //se envian las publicaciones en varias semanas 
+    var publicacionesSemanaData = {{ publicaciones_semana_data| safe }};
+
+
+    var encuestasSemanaData = {{ encuestas_semana_data| safe }};
+
+
+    var eventosSemanaData = {{ eventos_semana_data| safe }};
+
+
+    //se envian las publicaciones en la ultima semana
+    var publicacionesUltimaSemanaData = {{ Ultimas_publicaciones_semana_data| safe }};
+
+    var encuestasUltimaSemanaData = {{ Ultimas_encuestas_semana_data| safe }};
+
+    var eventosUltimaSemanaData = {{ Ultimas_eventos_semana_data| safe }};
+
+    //titulo con el total de publicaciones
+    var TotalPublicaciones = publicacionesUltimaSemanaData.length + ' Publicaciones en la ultima semana';
+    var total_titulo = document.getElementById("id_total_titulo");
+    total_titulo.textContent = TotalPublicaciones;
+
+    var TotalEncuestas = encuestasUltimaSemanaData.length + ' Encuestas en la ultima semana';
+    var total_tituloE = document.getElementById("id_total_tituloE");
+    total_tituloE.textContent = TotalEncuestas;
+
+    var TotalEventos = eventosUltimaSemanaData.length + ' Eventos en la ultima semana';
+    var total_tituloEv = document.getElementById("id_total_tituloEv");
+    total_tituloEv.textContent = TotalEventos;
+
+    //titulo con las fechas del rango de la semana
+    var Fecha = publicacionesUltimaSemanaData.map((publiUltimaSemana) => publiUltimaSemana["Fecha"]);
+    var fechaAMostrar = 'Semana desde ' + Fecha[0] + ' hasta ' + Fecha[Fecha.length - 1];
+    var titulo_ult_semana = document.getElementById("id_titulo_ult_semana");
+    titulo_ult_semana.textContent = fechaAMostrar;
+
+    //titulo con las fechas del rango de la semana
+    var FechaE = encuestasUltimaSemanaData.map((encuUltimaSemana) => encuUltimaSemana["Fecha"]);
+    var fechaAMostrar = 'Semana desde ' + FechaE[0] + ' hasta ' + FechaE[FechaE.length - 1];
+    var titulo_ult_semanaE = document.getElementById("id_titulo_ult_semanaE");
+    titulo_ult_semanaE.textContent = fechaAMostrar;
+
+    //titulo con las fechas del rango de la semana
+    var FechaEv = eventosUltimaSemanaData.map((eveUltimaSemana) => eveUltimaSemana["Fecha"]);
+    var fechaAMostrar = 'Semana desde ' + FechaEv[0] + ' hasta ' + FechaEv[FechaEv.length - 1];
+    var titulo_ult_semanaEv = document.getElementById("id_titulo_ult_semanaEv");
+    titulo_ult_semanaEv.textContent = fechaAMostrar;
+</script>
+
+<script src="../static/js/dashboard.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+{% endblock js_admin %}

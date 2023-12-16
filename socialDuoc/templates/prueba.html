@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+{% load static %}
+<!-- ESTILO CSS -->
+{% block css %}
+<link rel="stylesheet" href="{% static '/css/style_chat.css' %}">
+<link rel="stylesheet" type="text/css"
+    href="{% static 'https://necolas.github.io/normalize.css/8.0.1/normalize.css' %}">
+<link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+    integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+{% endblock css %}
+
+
+{% block contenido %}
+
+<!-- CARTA DE CHAT -->
+<section class="body-chat">
+    <div class="seccion-titulo">
+        <h3>
+            <i class="fas fa-comments"></i>
+            Mensajes
+        </h3>
+    </div>
+    <!-- SECCION DE USUARIOS IZQUIERDA -->
+    <div class="seccion-usuarios">
+        <div class="seccion-buscar">
+            <div class="input-buscar">
+                <input type="search" placeholder="Buscar usuario">
+                <i class="fas fa-search"></i>
+            </div>
+        </div>
+
+        <div class="seccion-lista-usuarios">
+
+            {% for chat in chats %}
+            <a href="#">
+                <div class="usuario" data-usuario-id="{{ chat.id_receptor }}">
+                    <div class="avatar">
+                        {% if chat.foto  == '0' %}
+                        <img src="{% static '/img/user.jpg' %}" alt="img">
+                        {% else %}
+                        <img src="data:image/png;base64, {{ chat.foto }}" alt="img">
+                        {% endif %}
+ 
+                    </div>
+                    <div class="cuerpo">
+                        <span> {{ chat.nombre_receptor }}</span>
+                        <span>detalles de mensaje</span>
+                    </div>
+                    <input type="text" class="chat-id" id="chat-id" value="{{ chat.id_chat }}" hidden>
+                    <input type="text" class="nombre" id="nombre" value="{{ chat.nombre_receptor }}" hidden>
+                </div>
+            </a>
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+    <!-- MENSAJE IZQUIERDA -->
+
+    <div class="seccion-chat">
+        <div class="usuario-seleccionado">
+            <!-- NOMBRE DE USUARIO QUE SE HABLA -->
+            <div class="cuerpo" id="titulo_nombre" style="width: 120px;">
+                CHAT
+            </div>
+        </div>
+
+        <div class="panel-chat">
+            <!-- 
+            {% for mensaje in mensajes %}
+            {% if mensaje.id_usu_origen == user.id %}
+             MENSAJE DERECHA (enviado por el usuario logeado) 
+            <div class="mensaje">
+                <div class="cuerpo-usuario">
+                    <div class="texto">{{ mensaje.mensaje }}</div>
+                </div>
+            </div>
+            {% else %}
+             MENSAJE IZQUIERDA (mensaje recibido) 
+            <div class="mensaje left">
+                <div class="cuerpo">
+                    <div class="texto">{{ mensaje.mensaje }}</div>
+                </div>
+            </div>
+            {% endif %}
+            {% endfor %}-->
+            <div class="texto" id="mensajes">{{ mensaje.mensaje }}</div>
+
+        </div>
+
+        <!-- SECCION DE ESCRITURA DEL CHAT -->
+
+
+        <form class=" mensaje" id="msgForm" method="post" action="{% url 'enviar_mensaje' %}">
+            {% csrf_token %}
+            <input type="text" name="chatIdInput" id="chatIdInput" hidden>
+            <input type="text" name="id_usuario" id="id_usuario" value="{{user.id}}" hidden>
+            <input type="text" name="id_usuario_recep" id="id_usuario_recep" hidden>
+            <div class="w-full" style="display: flex; flex-direction: column; position: relative;">
+                <textarea class="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" name="mensaje" placeholder="Escribir mensaje" id="mensaje"></textarea>
+                <button type="submit" class="enviar absolute" style="align-self: flex-end; bottom: 10px; right: 10px;">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </form>
+
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <style>
+        .panel-chat {
+            max-height: 400px;
+            /* Ajusta la altura máxima según tus preferencias */
+            overflow-y: auto;
+            /* Habilita la barra de desplazamiento vertical si es necesario */
+            padding: 10px;
+        }
+        
+    </style>
+
+</section>
+
+<script src="{% static '/js/chat.js' %}"></script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+{% endblock contenido %}

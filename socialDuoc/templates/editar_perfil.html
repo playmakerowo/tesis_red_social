@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block css %}
+
+{% endblock css %}
+
+
+{% block contenido %}
+
+<!-- SECCION CREAR PUBLICACION -->
+<section class="p-2 flex justify-center items-center min-h-screen dark:bg-gray-900 my-8 scale-up-center">
+    <div
+        class="w-full p-5 max-w-xl p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700">
+        <div class="py-4 px-2 mx-auto max-w-2xl">
+            <p class="m-3 p-0 flex justify-center items-center text-4xl font-bold text-gray-900 dark:text-white">
+                Editar Perfil</p>
+        </div>
+        <p class="m-6 p-0 flex justify-center items-center text-1xl text-gray-900 dark:text-white">
+            Puedes editar la imagen de perfil, telefono y correo personal.</p>
+        <form class="formulario" action="{% url 'EDI_PER' user.id %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <!-- SECCION SUBIR VIDEO O IMAGEN -->
+            <!-- SECCION ESCRIBIR CORREO PERSONAL -->
+            {% for u in usuario %}
+            <div class="sm:col-span-2">
+                <div class="flex justify-center items-center">
+                    {% for u in usuario %}
+                    {% for imagen in imagenes_usu %}
+                    {% if imagen.id_usu == u.0 %}
+                    {% if imagen.imagen_base64 != '0' %}
+                    <img class="rounded-full w-96 h-96" src="data:image/png;base64, {{ imagen.imagen_base64 }}"
+                        alt="Imagen">
+                    {% else %}
+                    <img class="rounded-full w-96 h-96" src="{% static 'img/user.jpg' %}" alt="Imagen Predeterminada">
+                    {% endif %}
+                    {% endif %}
+                    {% endfor %}
+                    {% endfor %}
+                </div>
+                <label for="message" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                    Imagen a subir</label>
+                <div class="flex items-center justify-center w-full">
+                    <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                        for="small_size"></label>
+                    <input
+                        class="block w-full mb-5 text-xs text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+                        id="small_size" type="file" id="txtImg" name="txtImg" accept="image/*">
+                </div>
+
+                <label for="name" class=" block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nuevo Correo
+                    Personal</label>
+                <input type="email" name="txtCorreo" id="txtCorreo"
+                    class="txtCorreo bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                    placeholder="Ingrese correo personal" value="{{u.12}}" maxlength="50">
+                <span id="charCountRespuesta" class="charCountRespuesta text-xs text-gray-400 dark:text-gray-300">0 /
+                    50</span>
+                <div class="sm:col-span-2">
+                    <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nuevo
+                        Telefono</label>
+                    <input type="text" name="txtTelefono" id="txtTelefono"
+                        class="txtTelefono bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                        placeholder="Ingrese correo personal" minlength="9" maxlength="9" value="{{u.13}}">
+                    <span id="charCountTelefono" class="charCountTelefono text-xs text-gray-400 dark:text-gray-300">0 /
+                        9</span>
+                </div>
+            </div>
+            {% endfor %}
+            <!-- BOTON -->
+            <div class="flex justify-center items-center mt-4 space-x-3 md:mt-6">
+                <button type="button" onclick="editar('{{user.id}}')"
+                    class="text-white justify-cente flex items-center bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">
+                    Aceptar
+                </button>
+                <a href="{% url 'PERF' user.id %}">
+                    <button type="button"
+                        class="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">Cancelar
+                    </button>
+                </a>
+            </div>
+        </form>
+        {% if messages %}
+        <ul class="messages pt-4">
+            {% for message in messages %}
+            <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+            <input type="text" id="mensaje" value="{{ message }}" hidden disabled>
+            {% endfor %}
+        </ul>
+        {% endif %}
+</section>
+
+<script type="text/javascript" src="{% static 'js/alerta_confirmar_crear_editar.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/contador_perfil.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/editar_perfil.js' %}"></script>
+{% endblock contenido %}

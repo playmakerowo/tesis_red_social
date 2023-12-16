@@ -1,0 +1,59 @@
+li.flex:hover {
+    background-color: rgb(13, 13, 13); /* Cambia el color de fondo al pasar el puntero */
+}                     
+li.flex {
+    position: relative;
+}
+
+li.flex::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 2px;
+    
+    transition: background s ease; /* Agrega una transición suave de color */
+    border-radius: 5px; /* Agrega curvas a los extremos */
+}
+
+li.flex:hover::after {
+    background: linear-gradient(to right, #00ccff, #0066ff); /* Cambia el color al pasar el ratón */
+}
+
+/* Otros estilos para el enlace */
+li.flex a {
+    text-decoration: none;
+}
+
+
+.text-hidden {
+    display: none;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.custom-text-color:hover .text-hidden {
+    display: inline;
+    opacity: 1;
+}
+    /* Agregar reglas para dispositivos móviles */
+    @media only screen and (max-width: 767px) {
+    .text-hidden {
+        display: inline;
+        opacity: 1;
+    }
+
+    li.flex::after {
+        display: none;
+    }
+
+    li.flex:hover::after {
+        display: none;
+    }
+
+    li.flex:hover::after,
+    li.flex::after {
+        display: block; /* Mostrar la línea bajo el enlace en dispositivos móviles */
+    }
+} 

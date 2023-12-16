@@ -1,0 +1,622 @@
+{% extends "base.html" %}
+{% load static %}
+{% block css %}
+<!-- ESTILO CSS -->
+<link rel="stylesheet" href="{% static '/css/style_perfil.css' %}">
+<link rel="stylesheet" href="{% static '/css/style-home.css '%}">
+{% endblock css %}
+{% block contenido %}
+<!-- CARTA DE USUARIO -->
+<section>
+    <section class="seccion-perfil-usuario">
+        <div class="perfil-usuario-header">
+            <div class="perfil-usuario-portada">
+                <div class="perfil-usuario-avatar">
+                    {% for u in usuario %}
+                    {% for imagen in imagenes_usu %}
+                    {% if imagen.id_usu == u.0 %}
+                    {% if imagen.imagen_base64 != '0' %}
+                    <img class="w-10 h-10 rounded" src="data:image/png;base64, {{ imagen.imagen_base64 }}" alt="Imagen">
+                    {% else %}
+                    <img class="w-10 h-10 rounded" src="{% static 'img/user.jpg' %}" alt="Imagen Predeterminada">
+                    {% endif %}
+                    {% endif %}
+                    {% endfor %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="perfil-usuario-body scale-up-ver-top">
+            <!-- CARTA DE USUARIO -->
+            <div class="perfil-usuario-bio">
+                <!-- BOTON DE EDITAR -->
+                <div class="editar">
+                    <a href="{% url 'EDI_PER' user.id %}">
+                        <button type="button" class="ms-1 right-6 bottom-6 text-blue-900">
+                            <svg class="w-5 h-5 hover:text-blue-700" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                fill="currentColor" viewBox="0 0 20 18">
+                                <path
+                                    d="M12.687 14.408a3.01 3.01 0 0 1-1.533.821l-3.566.713a3 3 0 0 1-3.53-3.53l.713-3.566a3.01 3.01 0 0 1 .821-1.533L10.905 2H2.167A2.169 2.169 0 0 0 0 4.167v11.666A2.169 2.169 0 0 0 2.167 18h11.666A2.169 2.169 0 0 0 16 15.833V11.1l-3.313 3.308Zm5.53-9.065.546-.546a2.518 2.518 0 0 0 0-3.56 2.576 2.576 0 0 0-3.559 0l-.547.547 3.56 3.56Z" />
+                                <path
+                                    d="M13.243 3.2 7.359 9.081a.5.5 0 0 0-.136.256L6.51 12.9a.5.5 0 0 0 .59.59l3.566-.713a.5.5 0 0 0 .255-.136L16.8 6.757 13.243 3.2Z" />
+                            </svg>
+                        </button>
+                    </a>
+                </div>
+                <!-- NOMBRE DEL USUARIO -->
+                {% for u in usuario %}
+                <h3 class="titulo font-medium">{{u.1}}</h3>
+                <h5>@{{u.11}}</h5>
+                {% endfor %}
+                <!-- SEGUIDORES, PUBLICACIONES, SEGUIDOS -->
+                <!--
+                <div class="columns flex justify-center items-center">
+                    {% for u in usuario %}
+                    <div class="text-center m-4">
+                        <p class="font-bold">{{u.8}}</p>
+                        <p class="column is-4">Seguidores</p>
+                    </div>
+                    <div class="text-center m-4">
+                        <p class="font-bold">{{u.7}}</p>
+                        <p class="column is-4">Seguidos</p>
+                    </div>
+                    {% endfor %}
+                </div>
+                -->
+            </div>
+            <!-- SECCION DATOS PERSONALES -->
+            <div class="perfil-usuario-footer">
+                <div class="container py-5">
+                    <div class="row">
+                        <div class="col-lg">
+                            <div class="card mb-4">
+                                <div class="card-header d-flex justify-content-end mb-2">
+
+                                </div>
+                                <div class="card-body text-center">
+                                    <div class="col-sm-3" style="padding-bottom: 25px;">
+                                        <p class="text-2xl font-bold text-gray-900 dark:text-white">Datos
+                                            Personales:</p>
+                                    </div>
+                                    {% for u in usuario %}
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            <p class="text-1xl font-bold text-gray-900 dark:text-white">Tipo de Usuario
+                                            </p>
+                                        </div>
+                                        <div class="col-sm-9">
+                                            <p class="text-muted mb-0">{{u.5}}</p>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            <p class="text-1xl font-bold text-gray-900 dark:text-white">Rut</p>
+                                        </div>
+                                        <div class="col-sm-9">
+                                            <p class="text-muted mb-0">{{u.2}}</p>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            <p class="text-1xl font-bold text-gray-900 dark:text-white">Género</p>
+                                        </div>
+                                        <div class="col-sm-9">
+                                            <p class="text-muted mb-0">{{u.6}}</p>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            <p class="text-1xl font-bold text-gray-900 dark:text-white">Correo
+                                                Institucional</p>
+                                        </div>
+                                        <div class="col-sm-9">
+                                            <p class="text-muted mb-0">{{u.3}}</p>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            <p class="text-1xl font-bold text-gray-900 dark:text-white">Correo
+                                                Personal</p>
+                                        </div>
+                                        <div class="col-sm-9">
+                                            <p class="text-muted mb-0">{{u.12}}</p>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            <p class="text-1xl font-bold text-gray-900 dark:text-white">Telefono:
+                                            </p>
+                                        </div>
+                                        <div class="col-sm-9">
+                                            <p class="text-muted mb-0">{{u.13}}</p>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            <p class="text-1xl font-bold text-gray-900 dark:text-white">Sede:</p>
+                                        </div>
+                                        <div class="col-sm-9">
+                                            <p class="text-muted mb-0">{{u.4}}</p>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col-sm-3">
+                                            <p class="text-1xl font-bold text-gray-900 dark:text-white">Carrera:</p>
+                                        </div>
+                                        <div class="col-sm-9">
+                                            <p class="text-muted mb-0">{{u.10}}</p>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- SECCION DE TUS PUBLICACIONES -->
+    <section>
+        <div class="mx-auto p-1 scale-up-ver-top" style="max-width: 60rem;">
+            <div id="accordion-open" class="bg-white border border-b-0 border-gray-200 rounded-t-xl mb-4"
+                data-accordion="open">
+                <h2 id="accordion-open-heading-1">
+                    <button type="button"
+                        class="flex items-center justify-between w-full p-5 font-medium text-left text-gray-500 border border-b-0 border-gray-200 rounded-t-xl focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-800 dark:border-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800"
+                        data-accordion-target="#accordion-open-body-1" aria-expanded="false"
+                        aria-controls="accordion-open-body-1">
+                        <span class="flex items-center font-bold">Tus publicaciones</span>
+                        <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0" aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 5 5 1 1 5" />
+                        </svg>
+                    </button>
+                </h2>
+                <div id="accordion-open-body-1" class="hidden bg-white" aria-labelledby="accordion-open-heading-1">
+                    <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                            <tr>
+                                <th scope="col" class="px-4 py-6">
+                                    Publicación
+                                </th>
+                                <th scope="col" class="px-4 py-6">
+                                    Estado
+                                </th>
+                                <th scope="col" class="px-4 py-6">
+                                    Acción
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for p in publicaciones %}
+                            
+                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                <th scope="row" class="flex items-center px-4 py-4 text-gray-900 dark:text-white">
+                                    <img class="w-10 h-10 rounded" src="data:image/png;base64, {{ p.7 }}" alt="Imagen">
+                                    <div class="pl-3 pr-0">
+                                        <p class="px-0 py-4 text-sm font-medium text-gray-500 dark:text-gray-300 grid grid-cols-1" style="white-space: nowrap; white-space: nowrap;overflow: hidden;text-overflow: ellipsis;max-width: 30rem;">
+                                            {{ p.3 }}
+                                        </p>
+                                    </div>
+                                </th>
+
+                                <td class="px-2 py-4">
+                                    <!-- BOTON -->
+                                    {% if p.4 == 1 %}
+                                    <div class="pl-2">
+                                        <svg id="icono" class="icono w-5 h-5" aria-hidden="true"
+                                            xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                            <path id="icono" class="icono"
+                                                d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z" />
+                                        </svg>
+                                    </div>
+                                    {% else %}
+                                    <div class="pl-2 text-red-500">
+                                        <svg class=" w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                            fill="currentColor" viewBox="0 0 20 20">
+                                            <path id="icono" class="icono"
+                                                d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 11.793a1 1 0 1 1-1.414 1.414L10 11.414l-2.293 2.293a1 1 0 0 1-1.414-1.414L8.586 10 6.293 7.707a1 1 0 0 1 1.414-1.414L10 8.586l2.293-2.293a1 1 0 0 1 1.414 1.414L11.414 10l2.293 2.293Z" />
+                                        </svg>
+                                    </div>
+                                    {% endif %}
+                                </td>
+                                <td class="px-0 py-4 flex items-center">
+                                    <div class="pl-3">
+                                        <!-- BOTON -->
+                                        <button
+                                            class="openPopoverBtn text-white bg-gradient-to-r from-cyan-400 via-cyan-500 to-cyan-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 text-xs">Mas</button>
+
+                                    <div class="popover hidden">
+                                        <!-- Contenido del popup -->
+                                        <h2 class="mb-2 text-lg font-semibold text-gray-900 dark:text-white">Detalles:
+                                        </h2>
+                                        <ul
+                                            class="max-w-md space-y-1 text-gray-500 list-disc list-inside dark:text-gray-400">
+                                            <li>
+                                                <span
+                                                    class="font-semibold text-gray-900 dark:text-white">Creador:</span>
+                                                {{p.1}}
+                                            </li>
+                                            <li>
+                                                <span
+                                                    class="font-semibold text-gray-900 dark:text-white">Descripcion:</span>
+                                                {{p.3}}
+                                            </li>
+                                            <li>
+                                                <span class="font-semibold text-gray-900 dark:text-white">Fecha:</span>
+                                                {{p.2}}
+                                            </li>
+                                            <li>
+                                                <span class="font-semibold text-gray-900 dark:text-white">Estado:</span>
+                                                <!-- BOTON -->
+                                                {% if p.4 == 1 %}
+                                                Activo
+                                                {% else %}
+                                                Archivado
+                                                {% endif %}
+                                            </li>
+                                        </ul>
+                                        <div class="flex justify-center items-center">
+                                            <button
+                                                class="closePopoverBtn mt-4 text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-full text-sm px-3 py-1.5 text-center me-2 mb-2">Cerrar</button>
+                                        </div>
+                                    </div>
+                                    {% if p.0 %}
+                                    <a href="{% url 'EDI_PUBLI' p.0 %}">
+                                        <button type="button"
+                                            class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-3 py-2.5 text-center mr-2 mb-2 text-xs">Editar</button>
+                                    </a>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <h2 id="accordion-open-heading-2">
+                    <button type="button"
+                        class="flex items-center justify-between w-full p-5 font-medium text-left text-gray-500 border border-b-0 border-gray-200 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-800 dark:border-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800"
+                        data-accordion-target="#accordion-open-body-2" aria-expanded="false"
+                        aria-controls="accordion-open-body-2">
+                        <span class="flex items-center font-bold">Tus eventos</span>
+                        <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0" aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 5 5 1 1 5" />
+                        </svg>
+                    </button>
+                </h2>
+                <div id="accordion-open-body-2" class="hidden" aria-labelledby="accordion-open-heading-2">
+                    <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                            <tr>
+                                <th scope="col" class="px-4 py-6">
+                                    Evento
+                                </th>
+                                <th scope="col" class="px-4 py-6">
+                                    Estado
+                                </th>
+                                <th scope="col" class="px-4 py-6">
+                                    Acción
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for e in eventos %}
+                            <tr
+                                class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                <td class="px-2 py-4">
+                                    <div class="pl-3" style="word-break: break-all;">
+                                        <p class="text-sm font-semibold text-gray-500 dark:text-gray-300">
+                                            {{e.0}}</p>
+                                    </div>
+                                </td>
+                                <td class="px-2 py-4">
+                                    <!-- BOTON -->
+                                    {% if e.7 == 1 %}
+                                    <div class="pl-3">
+                                        <svg id="icono" class="icono w-5 h-5" aria-hidden="true"
+                                            xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                            <path id="icono" class="icono"
+                                                d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z" />
+                                        </svg>
+                                    </div>
+                                    {% else %}
+                                    <div class="pl-3 text-red-500">
+                                        <svg class=" w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                            fill="currentColor" viewBox="0 0 20 20">
+                                            <path id="icono" class="icono"
+                                                d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 11.793a1 1 0 1 1-1.414 1.414L10 11.414l-2.293 2.293a1 1 0 0 1-1.414-1.414L8.586 10 6.293 7.707a1 1 0 0 1 1.414-1.414L10 8.586l2.293-2.293a1 1 0 0 1 1.414 1.414L11.414 10l2.293 2.293Z" />
+                                        </svg>
+                                    </div>
+                                    {% endif %}
+                                </td>
+
+                                <td class="px-0 py-4 flex items-center">
+                                    <div class="pl-3">
+                                        <!-- BOTON -->
+                                        <button
+                                            class="openPopoverBtn text-white bg-gradient-to-r from-cyan-400 via-cyan-500 to-cyan-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 text-xs">Mas</button>
+
+                                        <div class="popover hidden">
+                                            <!-- Contenido del popup -->
+                                            <h2 class="mb-2 text-lg font-semibold text-gray-900 dark:text-white">
+                                                Detalles:</h2>
+                                            <ul
+                                                class="max-w-md space-y-1 text-gray-500 list-disc list-inside dark:text-gray-400">
+                                                <li>
+                                                    <span
+                                                        class="font-semibold text-gray-900 dark:text-white">Titulo:</span>
+                                                    {{e.0}}
+                                                </li>
+                                                <li>
+                                                    <span
+                                                        class="font-semibold text-gray-900 dark:text-white">Creador:</span>
+                                                    {{e.1}}
+                                                </li>
+                                                <li>
+                                                    <span
+                                                        class="font-semibold text-gray-900 dark:text-white">Descripcion:</span>
+                                                    {{e.2}}
+                                                </li>
+                                                <li>
+                                                    <span class="font-semibold text-gray-900 dark:text-white">Fecha
+                                                        Inicio:</span>
+                                                    {{e.3}}
+                                                </li>
+                                                <li>
+                                                    <span class="font-semibold text-gray-900 dark:text-white">Fecha
+                                                        Fin:</span>
+                                                    {{e.4}}
+                                                </li>
+                                                <li>
+                                                    <span
+                                                        class="font-semibold text-gray-900 dark:text-white">Estado:</span>
+                                                    <!-- BOTON -->
+                                                    {% if e.7 == 1 %}
+                                                    Activo
+                                                    {% else %}
+                                                    Archivado
+                                                    {% endif %}
+                                                </li>
+                                            </ul>
+                                            <div class="flex justify-center items-center">
+                                                <button
+                                                    class="closePopoverBtn mt-4 text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-full text-sm px-3 py-1.5 text-center me-2 mb-2">Cerrar</button>
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                    <div class="pl-3">
+                                        <!-- BOTON -->
+                                        <a href="{% url 'EDI_EVE' e.6 %}">
+                                            <button type="button"
+                                                class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-3 py-2.5 text-center mr-2 mb-2 text-xs">Editar</button>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <h2 id="accordion-open-heading-3">
+                    <button type="button"
+                        class="flex items-center justify-between w-full p-5 font-medium text-left text-gray-500 border border-gray-200 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-800 dark:border-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800"
+                        data-accordion-target="#accordion-open-body-3" aria-expanded="false"
+                        aria-controls="accordion-open-body-3">
+                        <span class="flex items-center font-bold">Tus encuestas</span>
+                        <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0" aria-hidden="true"
+                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 5 5 1 1 5" />
+                        </svg>
+                    </button>
+                </h2>
+                <div id="accordion-open-body-3" class="hidden" aria-labelledby="accordion-open-heading-3">
+                    <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400 ">
+                        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                            <tr>
+                                <th scope="col" class="px-4 py-6">
+                                    Encuesta
+                                </th>
+                                <th scope="col" class="px-4 py-6">
+                                    Estado
+                                </th>
+                                <th scope="col" class="px-0 py-6">
+                                    Acción
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for en in encuestas %}
+                            {% if en.5 == user.id %}
+                            <tr
+                                class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                <td class="px-2 py-4">
+                                    <div class="pl-3" style="word-break: break-all;">
+                                        <p class="text-sm font-semibold text-gray-500 dark:text-gray-300">
+                                            {{en.0}}</p>
+                                    </div>
+                                </td>
+                                <td class="px-2 py-4">
+                                    <!-- BOTON -->
+                                    {% if en.9 == 1 %}
+                                    <div class="pl-3">
+                                        <svg id="icono" class="icono w-5 h-5" aria-hidden="true"
+                                            xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                            <path id="icono" class="icono"
+                                                d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z" />
+                                        </svg>
+                                    </div>
+                                    {% else %}
+                                    <div class="pl-3 text-red-500">
+                                        <svg class=" w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                            fill="currentColor" viewBox="0 0 20 20">
+                                            <path id="icono" class="icono"
+                                                d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 11.793a1 1 0 1 1-1.414 1.414L10 11.414l-2.293 2.293a1 1 0 0 1-1.414-1.414L8.586 10 6.293 7.707a1 1 0 0 1 1.414-1.414L10 8.586l2.293-2.293a1 1 0 0 1 1.414 1.414L11.414 10l2.293 2.293Z" />
+                                        </svg>
+                                    </div>
+                                    {% endif %}
+                                </td>
+                                <td class="px-0 py-4">
+                                    <!-- BOTON -->
+                                    {% if en.7 %}
+
+                                    <button
+                                        class="openPopoverBtn text-white bg-gradient-to-r from-cyan-400 via-cyan-500 to-cyan-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-cyan-300 dark:focus:ring-cyan-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 text-xs">Mas</button>
+
+                                    <div class="popover hidden">
+                                        <!-- Contenido del popup -->
+                                        <h2 class="mb-2 text-lg font-semibold text-gray-900 dark:text-white">
+                                            Detalles:</h2>
+                                        <ul
+                                            class="max-w-md space-y-1 text-gray-500 list-disc list-inside dark:text-gray-400">
+                                            <li>
+                                                <span class="font-semibold text-gray-900 dark:text-white">Titulo:</span>
+                                                {{en.0}}
+                                            </li>
+                                            <li>
+                                                <span
+                                                    class="font-semibold text-gray-900 dark:text-white">Creador:</span>
+                                                {{en.6}}
+                                            </li>
+                                            <li>
+                                                <span
+                                                    class="font-semibold text-gray-900 dark:text-white">Pregunta:</span>
+                                                {{en.1}}
+                                            </li>
+                                            <li>
+                                                <span
+                                                    class="font-semibold text-gray-900 dark:text-white">Descripcion:</span>
+                                                {{en.2}}
+                                            </li>
+                                            <li>
+                                                <span class="font-semibold text-gray-900 dark:text-white">Fecha
+                                                    Inicio:</span>
+                                                {{en.3}}
+                                            </li>
+                                            <li>
+                                                <span class="font-semibold text-gray-900 dark:text-white">Fecha
+                                                    Fin:</span>
+                                                {{en.4}}
+                                            </li>
+                                            <li>
+                                                <span class="font-semibold text-gray-900 dark:text-white">Enlace:</span>
+                                                {{en.8}}
+                                            </li>
+                                            <li>
+                                                <span class="font-semibold text-gray-900 dark:text-white">Estado:</span>
+                                                <!-- BOTON -->
+                                                {% if en.9 == 1 %}
+                                                Activo
+                                                {% else %}
+                                                Archivado
+                                                {% endif %}
+                                            </li>
+                                        </ul>
+                                        <div class="flex justify-center items-center">
+                                            <button
+                                                class="closePopoverBtn mt-4 text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-full text-sm px-3 py-1.5 text-center me-2 mb-2">Cerrar</button>
+                                        </div>
+
+                                    </div>
+
+                                    
+                                    <a href="{% url 'EDI_ENC' en.7 %}">
+                                        <button type="button"
+                                            class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-3 py-2.5 text-center mr-2 mb-2 text-xs">Editar</button>
+                                    </a>
+                                    {% endif %}
+                                </td>
+                            </tr>
+
+                            {% endif %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <style>
+            /* Estilo básico para el Popover */
+            .popover {
+                display: none;
+                position: fixed;
+                background-color: #fff;
+                border: 1px solid #ccc;
+                padding: 20px;
+                padding-bottom: 10px;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                border-radius: 10px;
+                max-width: 30rem; /* Ajusta este valor según tus necesidades */
+                left: 50%;
+                
+            }
+        
+            /* Consulta de medios para dispositivos móviles */
+            @media only screen and (max-width: 767px) {
+                .popover {
+                    width: 100%;
+                    max-width: 20rem;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    word-wrap: break-word;
+                }
+            }
+        </style>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                // Obtener nodos de la colección por clase
+                var openBtns = document.querySelectorAll('.openPopoverBtn');
+                var popovers = document.querySelectorAll('.popover');
+                var closeBtns = document.querySelectorAll('.closePopoverBtn');
+
+                // Función para cerrar todos los popovers
+                function closeAllPopovers() {
+                    popovers.forEach(function (popover) {
+                        popover.style.display = 'none';
+                    });
+                }
+
+                // Agregar un evento de clic a cada botón de apertura
+                openBtns.forEach(function (openBtn, index) {
+                    openBtn.addEventListener('click', function () {
+                        // Cerrar todos los popovers abiertos
+                        closeAllPopovers();
+
+                        // Mostrar el Popover correspondiente
+                        popovers[index].style.display = 'block';
+                    });
+                });
+
+                // Agregar un evento de clic a cada botón de cierre
+                closeBtns.forEach(function (closeBtn, index) {
+                    closeBtn.addEventListener('click', function () {
+                        // Ocultar el Popover correspondiente
+                        popovers[index].style.display = 'none';
+                    });
+                });
+
+                // Agregar un evento de clic al documento para cerrar el popover al hacer clic fuera de él
+                document.addEventListener('click', function (event) {
+                    if (!event.target.matches('.openPopoverBtn') && !event.target.closest('.popover')) {
+                        // Si el clic no fue en el botón de apertura ni dentro del popover, cerrar todos los popovers
+                        closeAllPopovers();
+                    }
+                });
+            });
+        </script>
+    </section>
+    {% endblock contenido %}

@@ -1,0 +1,224 @@
+{% extends "base_admin.html" %}
+{% load static %}
+
+{% block titulo_admin %}
+
+<title>Modificar Usuarios</title>
+
+{% endblock titulo_admin %}
+
+{% block contenido_admin %}
+
+<div class="p-4 sm:ml-64">
+    <div class="p-4 border-gray-200 border-dashed rounded-lg dark:border-gray-700" id="carta">
+        <div style="display: flex; justify-content: start;">
+            <a href="{% url 'ADM_USER' %}" class="btn btn-primary">
+                <button class="m-4">
+                    <svg class="w-8 h-8 text-gray-800 dark:text-white" aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 8 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M7 1 1.3 6.326a.91.91 0 0 0 0 1.348L7 13" />
+                    </svg>
+                </button>
+            </a>
+
+            <!--Inicio Titulo-->
+
+            {% for User in usuario %}
+
+            <div class=" relative z-0 w-full mb-6 group">
+                <p class="text-2xl font-bold dark:text-white m-4">Modificar Usuario: {{User.2}} {{User.3}}</p>
+            </div>
+        </div>
+        <!--Fin Titulo-->
+        <!--Inicio espacio tabla-->
+        <div class="justify-center rounded dark:bg-gray-800">
+            <!--Inico Formulario-->
+            <form method="post" action="{% url 'MOD_USER' %}">
+                {% csrf_token %}
+                <input type="hidden" name="id" value="{{ User.0 }}">
+                <div class="flex justify-center mb-4">
+                    {% if User.18 == '0' %}
+                    <img class="rounded-full" style="height: 20vw;" src="{% static '/img/user.jpg' %}">
+                    {% else %}
+                    <img class="rounded-full" style="height: 20vw; width: 20vw;"
+                        src="data:image/png;base64, {{User.18}}">
+                    {% endif %}
+                </div>
+                <!--Eliminar fotos-->
+                <button type="submit" name="accion" value="eliminar_foto"
+                    class="m-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Eliminar
+                    foto</button>
+                <!--Input titulo-->
+                <div class="grid items-end gap-6 m-2 md:grid-cols-2">
+                    <!--nombre usuario-->
+                    <div class="relative">
+                        <input type="text" id="" name="nombre"
+                            class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm text-gray-900 bg-gray-50 dark:bg-gray-700 border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                            value="{{User.2}}" required maxlength="30" readonly/>
+                        <label
+                            class="absolute text-sm text-gray-400 dark:text-gray-500 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-2.5 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4">Nombre
+                        </label>
+                    </div>
+                    <!--apellido usuario padre-->
+                    <div class="relative">
+                        <input type="text" id="" name="ap_paterno"
+                            class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm text-gray-900 bg-gray-50 dark:bg-gray-700 border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                            value="{{User.3}}" required maxlength="30" readonly/>
+                        <label
+                            class="absolute text-sm text-gray-400 dark:text-gray-500 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-2.5 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4">Apellido
+                            Paterno
+                        </label>
+                    </div>
+                    <!--apellido usuario maddre-->
+                    <div class="relative">
+                        <input type="text" id="" name="ap_materno"
+                            class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm text-gray-900 bg-gray-50 dark:bg-gray-700 border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                            value="{{User.12}}" required maxlength="30" readonly/>
+                        <label
+                            class="absolute text-sm text-gray-400 dark:text-gray-500 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-2.5 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4">Apellido
+                            Materno
+                        </label>
+                    </div>
+                    <!--telefono usuario-->
+                    <div class="relative">
+                        <input type="text" id="" name="telefono"
+                            class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm text-gray-900 bg-gray-50 dark:bg-gray-700 border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                            value="{{User.10}}" maxlength="9" />
+                        <label for=""
+                            class="absolute text-sm text-gray-400 dark:text-gray-500 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-2.5 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4">Usuario
+                            Telefono
+                        </label>
+                    </div>
+                    <!--correo usuario-->
+                    <div class="relative">
+                        <input type="text" id=""
+                            class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm text-gray-900 bg-gray-50 dark:bg-gray-700 border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                            value="{{User.1}}" required maxlength="50"  readonly/>
+                        <label for=""
+                            class="absolute text-sm text-gray-400 dark:text-gray-500 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-2.5 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4">Correo
+                            Institucional
+                        </label>
+                    </div>
+                    <!--correo personal-->
+                    <div class="relative">
+                        <input type="text" id="" name="correo_personal"
+                            class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm text-gray-900 bg-gray-50 dark:bg-gray-700 border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                            value="{{User.9}}" maxlength="50"  readonly/>
+                        <label for=""
+                            class="absolute text-sm text-gray-400 dark:text-gray-500 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-2.5 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4">Correo
+                            personal
+                        </label>
+                    </div>
+                    <!-- comuna-->
+                    <div class="relative">
+                        <select id="" name="comuna"
+                            class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm text-gray-900 bg-gray-50 dark:bg-gray-700 border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer">
+                            <option selected value="{{User.16}}">{{User.17}}</option>
+                            {% for com in comunas %}
+                            {% if com.0 != User.16 %}
+                            <option value="{{ com.0 }}">{{ com.1 }}</option>
+                            {% endif %}
+                            {% endfor %}
+                        </select>
+                        <label for=""
+                            class="absolute text-sm text-gray-400 dark:text-gray-500 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-2.5 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4">Comuna
+                        </label>
+                    </div>
+                    <!--Tipo usuario-->
+                    <div class="relative">
+                        <select id="" name="tipo"
+                            class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm text-gray-900 bg-gray-50 dark:bg-gray-700 border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer">
+                            <option selected value="{{User.13}}">{{User.4}}</option>
+                            {% for tipo in tipos_usuario %}
+                            {% if tipo.1 != User.4 %}
+                            <option value="{{ tipo.0 }}">{{ tipo.1 }}</option>
+                            {% endif %}
+                            {% endfor %}
+
+                        </select>
+                        <label
+                            class="absolute text-sm text-gray-400 dark:text-gray-500 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-2.5 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4">Tipo
+                            de usuario
+                        </label>
+                    </div>
+                    <!--SEDE-->
+                    <div class="relative">
+                        <select id="" name="sede"
+                            class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm text-gray-900 bg-gray-50 dark:bg-gray-700 border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer">
+                            <option selected value="{{User.14}}">{{User.8}}</option>
+                            {% for sede in sedes %}
+                            {% if sede.1 != User.8 %}
+                            <option value={{sede.0}}>{{sede.1}}</option>
+                            {% endif %}
+                            {% endfor %}
+                        </select>
+                        <label
+                            class="absolute text-sm text-gray-400 dark:text-gray-500 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-2.5 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4">Sede
+                        </label>
+                    </div>
+                    <!--GENERO-->
+                    <div class="relative">
+                        <select id="" name="genero"
+                            class="block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full text-sm text-gray-900 bg-gray-50 dark:bg-gray-700 border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer">
+                            <option selected value="{{ User.15 }}">{{User.11}}</option>
+                            {% for gen in generos %}
+                            {% if gen.1 != User.11 %}
+                            <option value="{{ gen.0 }}">{{ gen.1 }}</option>
+                            {% endif %}
+                            {% endfor %}
+
+                        </select>
+                        <label
+                            class="absolute text-sm text-gray-400 dark:text-gray-500 duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] left-2.5 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-4">Genero
+                        </label>
+                    </div>
+                </div>
+
+                <!--Titulo Estado-->
+                {% if user.id != User.0 %}
+                <div class="relative z-0 w-full m-2  group">
+                    <p class="text-lg font-normal dark:text-white">Estado</p>
+                </div>
+                <!--Input Estado-->
+                <div class="relative z-0 w-full m-2  group">
+
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        {% if User.7 == 1 %}
+                        <input type="checkbox" name="estado" value="1" class="sr-only peer" checked>
+                        {% else %}
+                        <input type="checkbox" name="estado" value="1" class="sr-only peer">
+                        {% endif %}
+                        <div
+                            class="w-14 h-7 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600">
+                        </div>
+                        <span class="ml-3 text-sm font-medium dark:text-dark-300" style="color: black;">Inactivo /
+                            Activo</span>
+                    </label>
+                </div>
+                
+                <!--Boton de Modificar-->
+                <button type="submit" name="accion" value="modificar"
+                    class="m-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Modificar</button>
+                    {% endif %}
+                </form>
+            <!--Fin Formulario-->
+            {% if messages %}
+            <ul class="messages pt-4">
+                {% for message in messages %}
+                <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+                <input type="text" id="mensaje" value="{{ message }}" hidden>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+        {% endfor %}
+        <!--Fin espacio tabla-->
+    </div>
+</div>
+
+{% endblock contenido_admin %}
+
+{% block js_admin %}
+<script src="{% static '/js/a_modificar_usuario.js' %}"></script>
+{% endblock js_admin %}

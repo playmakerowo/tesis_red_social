@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+{% load static %}
+    {% block contenido %}
+    <!-- SECCION DE CREAR ENCUESTA -->
+    <section class="flex justify-center items-center min-h-screen dark:bg-gray-900"
+        style="margin-top: 100px;margin-bottom: 50px;">
+        <div
+            class="w-full max-w-xl p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700">
+            <!-- CREAR ENCUESTA -->
+            <div class="py-8 px-4 mx-auto max-w-2xl">
+                <p class="m-6 p-0 flex justify-center items-center text-4xl font-bold text-gray-900 dark:text-white">
+                    Resultados Encuesta</p>
+            </div>
+            <p class="m-6 p-0 flex justify-center items-center text-1xl text-gray-900 dark:text-white">
+                Puedes editar y ver los resultados de la encuesta realizada</p>
+                <div class="mb-4 justify-center flex pb-4 border-b border-gray-200 dark:border-gray-700">
+                    <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" id="myTab"
+                        data-tabs-toggle="#myTabContent" role="tablist">
+                        <li class="mr-2" role="presentation">
+                            <a href="{% url 'EDI_ENC' %}">
+                            <button class="inline-block p-4 border-b-2 rounded-t-lg" id="profile-tab"
+                                data-tabs-target="#profile" type="button" role="tab" aria-controls="profile"
+                                aria-selected="false">Editar</button>
+                            </a>
+                        </li>
+                        <li class="mr-2" role="presentation">
+                            <a href="{% url 'RES_ENC' %}">
+                            <button
+                                class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
+                                id="dashboard-tab" data-tabs-target="#dashboard" type="button" role="tab"
+                                aria-controls="dashboard" aria-selected="false">Resultados</button>
+    
+                            </li>
+                    </ul>
+                </div>
+            <form>
+                <!-- OPCIONES -->
+                <div
+                    class="mt-4 justify-center w-full  bg-white border border-gray-200 rounded-lg  sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700">
+
+                    <div class="flex items-center mb-2">
+                    </div>
+                    <p
+                        class="m-6 p-0 flex justify-center items-center text-1xl font-bold text-gray-900 dark:text-white">
+                        Resultados Encuesta</p>
+                    <div class="flex items-center mt-4">
+                        <p class="text-sm font-medium text-gray-600 dark:text-gray-500 ">Respuesta 1</p>
+                        <div class="w-2/4 h-5 mx-4 bg-gray-200 rounded dark:bg-gray-700">
+                            <div class="h-5 bg-yellow-300 rounded" style="width: 70%"></div>
+                        </div>
+                        <span class="text-sm font-medium text-gray-500 dark:text-gray-400">70%</span>
+                    </div>
+                    <div class="flex items-center mt-4">
+                        <p class="text-sm font-medium text-gray-600 dark:text-gray-500 ">Respuesta 2</p>
+                        <div class="w-2/4 h-5 mx-4 bg-gray-200 rounded dark:bg-gray-700">
+                            <div class="h-5 bg-yellow-300 rounded" style="width: 17%"></div>
+                        </div>
+                        <span class="text-sm font-medium text-gray-500 dark:text-gray-400">17%</span>
+                    </div>
+                    <div class="flex items-center mt-4">
+                        <p class="text-sm font-medium text-gray-600 dark:text-gray-500 ">Respuesta 3</p>
+                        <div class="w-2/4 h-5 mx-4 bg-gray-200 rounded dark:bg-gray-700">
+                            <div class="h-5 bg-yellow-300 rounded" style="width: 8%"></div>
+                        </div>
+                        <span class="text-sm font-medium text-gray-500 dark:text-gray-400">8%</span>
+                    </div>
+                    <div class="flex items-center mt-4">
+                        <p class="text-sm font-medium text-gray-600 dark:text-gray-500 ">Respuesta 4</p>
+                        <div class="w-2/4 h-5 mx-4 bg-gray-200 rounded dark:bg-gray-700">
+                            <div class="h-5 bg-yellow-300 rounded" style="width: 4%"></div>
+                        </div>
+                        <span class="text-sm font-medium text-gray-500 dark:text-gray-400">4%</span>
+                    </div>
+                    <div class="flex items-center mt-4">
+                        <p class="text-sm font-medium text-gray-600 dark:text-gray-500 ">Respuesta 5</p>
+                        <div class="w-2/4 h-5 mx-4 bg-gray-200 rounded dark:bg-gray-700">
+                            <div class="h-5 bg-yellow-300 rounded" style="width: 1%"></div>
+                        </div>
+                        <span class="text-sm font-medium text-gray-500 dark:text-gray-400">1%</span>
+                    </div>
+            </form>
+
+        </div>
+        <!-- SECCION DE RESPUESTAS DE ENCUESTA -->
+        <div
+            class="w-full max-w-xl mt-6 p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700">
+            <p class="m-6 p-0 flex justify-center items-center text-1xl font-bold text-gray-900 dark:text-white">
+                Respuestas</p>
+            <ul class="space-y-4 text-gray-500 list-disc list-inside dark:text-gray-400">
+                <li>
+                    Respuestas 1
+                    <ol class="pl-5 mt-2 space-y-1 list-decimal list-inside">
+                        <li>You might feel like you are being really "organized" o</li>
+                    </ol>
+                </li>
+                <li>
+                    Respuestas 2
+                    <ul class="pl-5 mt-2 space-y-1 list-decimal list-inside">
+                        <li>I'm not sure if we'll bother styling more than two levels deep.</li>
+                    </ul>
+                </li>
+                <li>
+                    Respuestas 3
+                    <ul class="pl-5 mt-2 space-y-1 list-decimal list-inside">
+                        <li>Again please don't nest lists if you want</li>
+                    </ul>
+                </li>
+                <li>
+                    Respuestas 3
+                    <ul class="pl-5 mt-2 space-y-1 list-decimal list-inside">
+                        <li>Again please don't nest lists if you want</li>
+                    </ul>
+                </li>
+                <li>
+                    Respuestas 3
+                    <ul class="pl-5 mt-2 space-y-1 list-decimal list-inside">
+                        <li>Again please don't nest lists if you want</li>
+                    </ul>
+                </li>
+            </ul>
+
+        </div>
+        <div class="flex justify-center items-center mt-4 space-x-3 md:mt-6">
+            <!-- BOTON -->
+            <a href="{% url 'HOME' %}">
+                <button type="submit"
+                    class="text-white justify-cente flex items-center bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">
+                    Aceptar
+                </button>
+                </a>
+                <a href="{% url 'HOME' %}">
+                    <button type="button"
+                        class="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">Cancelar</button>
+                </a>
+        </div>
+        </div>
+        </div>
+
+    </section>
+    {% endblock contenido %}

@@ -1,0 +1,659 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- NOMBRE PAGINA -->
+    <title>Social Duoc</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- Incluye Select2 CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+
+    <!-- Incluye Select2 JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+    <link rel="icon" type="image/png" href="{% static 'img/favicon.png' %}" />
+
+    <!-- FUENTE -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+    <!-- FLOWBITE -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- ESTILO CSS-->
+    <link rel="stylesheet" href="{% static '/css/style-general.css' %}">
+    <link rel="stylesheet" href="{% static '/css/style-footer.css' %}">
+    <link rel="stylesheet" href="{% static '/css/style-home.css' %}">
+    <link rel="stylesheet" href="{% static '/css/navbar.css' %}">
+
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8"
+        src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"></script>
+    <link rel="stylesheet" type="text/css"
+        href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
+    <!-- DataTables Buttons JavaScript -->
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.colVis.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+    {% load pwa %}
+
+    {% progressive_web_app_meta %}
+
+    <script src="https://www.gstatic.com/firebasejs/3.9.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/3.9.0/firebase-messaging.js"></script>
+
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyD5GhXW8jRZwZ6r0VgNrirxV2wh6arjaD8",
+            authDomain: "social-duoc-4909a.firebaseapp.com",
+            projectId: "social-duoc-4909a",
+            storageBucket: "social-duoc-4909a.appspot.com",
+            messagingSenderId: "143594619359",
+            appId: "1:143594619359:web:1eac03c86c1ae086f8046a"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+
+        let messaging = firebase.messaging();
+
+        navigator.serviceWorker
+            .register('../serviceworker.js')
+            .then(function (register) {
+                messaging.useServiceWorker(register);
+                // solicitar autorizacion para notificaciones
+                messaging.requestPermission()
+                    .then(function () {
+                        console.log("el usuario acepto notificaciones")
+                        /// generamos un token
+                        return messaging.getToken();
+                    })
+                    .then(function (token) {
+                        // mostrar el token
+                        console.log(token)
+                        fetch('/guardar-token/', {
+                            method: 'post',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                'token': token
+                            })
+                        })
+
+                    })
+                    .catch(function (e) {
+                        console.log("el usuario no acepto las notificaciones")
+                    })
+            })
+        //// modelo de notificacion ///////////////////////////////
+        messaging.onMessage(function (payload) {
+            let titulo = 'Social Duoc'
+            let opciones = {
+                body: 'Novedades en la plataforma Social Duoc',
+                icon: '/static/img/logo_socialduoc_white.png'
+            }
+            let mensaje = new Notification(titulo, opciones)
+        })
+
+
+    </script>
+
+    {% block css %}
+
+
+    {% endblock css %}
+
+
+</head>
+
+<body class="bg-white dark:bg-gray-900 antialiased">
+    <!-- IMPORTACION DE NAVBAR -->
+    <header>
+        <nav class="navbar border-gray-200 dark:bg-gray-900" style="background-color: black;">
+            <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-2">
+                <!-- LOGO IMAGEN NAVBAR -->
+                <div class="d-flex align-items-center">
+                    <a class="navbar-brand" href="{% url 'HOME' %}">
+                        <img src="{% static '/img/logo_socialduoc_white.png' %}" alt="Logo" class="mr-5 h-9 sm:h-15">
+                    </a>
+                </div>
+                <!-- PARTE 1 DE BUSCAR -->
+                <div class="flex md:order-6">
+                    <div class="relative hidden md:block">
+                        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                    stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+                            </svg>
+                            <span class="sr-only">Search icon</span>
+                        </div>
+                        <form action="{% url 'BUS_USU' %}" method="get" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <input type="text" id="nombre_usuario" name="q" values="{{ search_query }}"
+                                class="block w-full p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-full bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                placeholder="Buscar...">
+                        </form>
+                    </div>
+                    <button data-collapse-toggle="navbar-search" type="button"
+                        class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+                        aria-controls="navbar-search" aria-expanded="false">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                            viewBox="0 0 17 14">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M1 1h15M1 7h15M1 13h15" />
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- PARTE 2 DE BUSCAR -->
+                <div class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-search">
+                    <div class="relative mt-3 md:hidden">
+                        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                    stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+                            </svg>
+                        </div>
+                        <form action="{% url 'BUS_USU' %}" method="get" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <input type="text" id="nombre_usuario" name="q" values="{{ search_query }}"
+                                class="block w-full p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-full bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                placeholder="Buscar...">
+                        </form>
+                    </div>
+
+                    <ul
+                        class="custom-bg-color custom-font-normal flex flex-col p-4 md:p-0 mt-4 font-medium  rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
+                        <!-- Contenido de la lista -->
+                        {% if user.is_superuser == 0 %}
+                        <a href="{% url 'HOME' %}" type="button" id="salir"
+                            class="text-sm custom-text-color flex items-center py-2 pl-3 pr-4 text-gray-900 rounded md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:border-gray-700">
+
+                            <li class="flex items-center">
+                                <!-- SALIR -->
+
+                                <svg class="bi bi-box-arrow-right mr-2" width="25" height="25" aria-hidden="true"
+                                    xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                    <path
+                                        d="m19.707 9.293-2-2-7-7a1 1 0 0 0-1.414 0l-7 7-2 2a1 1 0 0 0 1.414 1.414L2 10.414V18a2 2 0 0 0 2 2h3a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1h3a2 2 0 0 0 2-2v-7.586l.293.293a1 1 0 0 0 1.414-1.414Z" />
+                                </svg>
+                                <span class="text-hidden">Inicio</span>
+
+                            </li>
+                        </a>
+                        <a href="{% url 'CHAT' %}"
+                            class="text-sm custom-text-color flex items-center py-2 pl-3 pr-4 text-gray-900 rounded md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:border-gray-700">
+                            <li class="flex items-center">
+                                <!-- Mensaje -->
+
+                                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
+                                    class="bi bi-chat-dots-fill mr-2" viewBox="0 0 16 16">
+                                    <path
+                                        d="M16 8c0 3.866-3.582 7-8 7a9.06 9.06 0 0 1-2.347-.306c-.584.296-1.925.864-4.181 1.234-.2.032-.352-.176-.273-.362.354-.836.674-1.95.77-2.966C.744 11.37 0 9.76 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7zM5 8a1 1 0 1 0-2 0 1 1 0 0 0 2 0zm4 0a1 1 0 1 0-2 0 1 1 0 0 0 2 0zm3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2z" />
+                                </svg>
+                                <span class="text-hidden">Chat</span>
+                                <!-- Dropdown menu -->
+
+                            </li>
+                        </a>
+                        <a href="{% url 'PERF' user.id %}"
+                            class="text-sm custom-text-color flex items-center py-2 pl-3 pr-4 text-gray-900 rounded md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:border-gray-700">
+                            <li class="flex items-center">
+                                <!-- PERFIL -->
+
+                                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
+                                    class="bi bi-person-circle mr-2" viewBox="0 0 16 16">
+                                    <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
+                                    <path fill-rule="evenodd"
+                                        d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z" />
+                                </svg>
+                                <span class="text-hidden">Perfil</span>
+
+                            </li>
+                        </a>
+                        <a href="{% url 'CERRAR' %}" type="button" id="salir"
+                            class="text-sm custom-text-color flex items-center py-2 pl-3 pr-4 text-gray-900 rounded md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:border-gray-700">
+                            <li class="flex items-center">
+                                <!-- SALIR -->
+
+                                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
+                                    class="bi bi-box-arrow-right mr-2" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd"
+                                        d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z" />
+                                    <path fill-rule="evenodd"
+                                        d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z" />
+                                </svg>
+                                <span class="text-hidden">Salir</span>
+
+                            </li>
+                        </a>
+                        {% endif %}
+                        <!-- SECCION ADMIN -->
+                        {% if user.is_superuser == 1 %}
+                        <a href="{% url 'HOME' %}" type="button" id="salir"
+                            class="text-sm custom-text-color flex items-center py-2 pl-3 pr-4 text-gray-900 rounded md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:border-gray-700">
+
+                            <li class="flex items-center p-2 rounded-md">
+                                <!-- INICIO ADMIN -->
+
+                                <svg class="bi bi-box-arrow-right mr-2" width="25" height="25" aria-hidden="true"
+                                    xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                    <path
+                                        d="m19.707 9.293-2-2-7-7a1 1 0 0 0-1.414 0l-7 7-2 2a1 1 0 0 0 1.414 1.414L2 10.414V18a2 2 0 0 0 2 2h3a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1h3a2 2 0 0 0 2-2v-7.586l.293.293a1 1 0 0 0 1.414-1.414Z" />
+                                </svg>
+                                <span class="text-hidden">Inicio</span>
+
+                            </li>
+                        </a>
+                        <a href="{% url 'CHAT' %}"
+                            class="text-sm custom-text-color flex items-center py-2 pl-3 pr-4 text-gray-900 rounded md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:border-gray-700">
+                            <li class="flex items-center p-2 rounded-md">
+                                <!-- Mensaje -->
+
+                                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
+                                    class="bi bi-chat-dots-fill mr-2" viewBox="0 0 16 16">
+                                    <path
+                                        d="M16 8c0 3.866-3.582 7-8 7a9.06 9.06 0 0 1-2.347-.306c-.584.296-1.925.864-4.181 1.234-.2.032-.352-.176-.273-.362.354-.836.674-1.95.77-2.966C.744 11.37 0 9.76 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7zM5 8a1 1 0 1 0-2 0 1 1 0 0 0 2 0zm4 0a1 1 0 1 0-2 0 1 1 0 0 0 2 0zm3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2z" />
+                                </svg>
+                                <span class="text-hidden">Chat</span>
+                                <!-- Dropdown menu -->
+
+                            </li>
+                        </a>
+                        <a href="{% url 'secciones' %}" type="button" id="secciones"
+                            class="text-sm custom-text-color flex items-center py-2 pl-3 pr-4 text-gray-900 rounded md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:border-gray-700">
+                            <li class="flex items-center p-2 rounded-md">
+                                <!-- SALIR -->
+
+                                <i class="fa fa-book mr-2 fa-2x"></i> <!-- Increase the size by using fa-2x class -->
+                                <span class="text-hidden">Seccion</span>
+
+                            </li>
+                        </a>
+                        <a href="{% url 'DASH' %}" type="button" id="salir"
+                            class="text-sm custom-text-color flex items-center py-2 pl-3 pr-4 text-gray-900 rounded md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:border-gray-700">
+                            <li class="flex items-center p-2 rounded-md">
+                                <!-- BOTON ADMIN -->
+
+                                <svg class=" dark:text-white mr-2" width="25" height="25" aria-hidden="true"
+                                    viewBox="0 0 20 18" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                    <path
+                                        d="M6.5 8C5.80777 8 5.13108 7.79473 4.55551 7.41015C3.97993 7.02556 3.53133 6.47893 3.26642 5.83939C3.00152 5.19985 2.9322 4.49612 3.06725 3.81719C3.2023 3.13825 3.53564 2.51461 4.02513 2.02513C4.51461 1.53564 5.13825 1.2023 5.81719 1.06725C6.49612 0.932205 7.19985 1.00152 7.83939 1.26642C8.47893 1.53133 9.02556 1.97993 9.41015 2.55551C9.79473 3.13108 10 3.80777 10 4.5"
+                                        stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round" />
+                                    <path
+                                        d="M6.5 17H1V15C1 13.9391 1.42143 12.9217 2.17157 12.1716C2.92172 11.4214 3.93913 11 5 11"
+                                        stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round" />
+                                    <path
+                                        d="M19.5 11H18.38C18.2672 10.5081 18.0714 10.0391 17.801 9.613L18.601 8.818C18.6947 8.72424 18.7474 8.59708 18.7474 8.4645C18.7474 8.33192 18.6947 8.20476 18.601 8.111L17.894 7.404C17.8002 7.31026 17.6731 7.25761 17.5405 7.25761C17.4079 7.25761 17.2808 7.31026 17.187 7.404L16.392 8.204C15.9647 7.93136 15.4939 7.73384 15 7.62V6.5C15 6.36739 14.9473 6.24021 14.8536 6.14645C14.7598 6.05268 14.6326 6 14.5 6H13.5C13.3674 6 13.2402 6.05268 13.1464 6.14645C13.0527 6.24021 13 6.36739 13 6.5V7.62C12.5081 7.73283 12.0391 7.92863 11.613 8.199L10.818 7.404C10.7242 7.31026 10.5971 7.25761 10.4645 7.25761C10.3319 7.25761 10.2048 7.31026 10.111 7.404L9.404 8.111C9.31026 8.20476 9.25761 8.33192 9.25761 8.4645C9.25761 8.59708 9.31026 8.72424 9.404 8.818L10.204 9.618C9.9324 10.0422 9.73492 10.5096 9.62 11H8.5C8.36739 11 8.24021 11.0527 8.14645 11.1464C8.05268 11.2402 8 11.3674 8 11.5V12.5C8 12.6326 8.05268 12.7598 8.14645 12.8536C8.24021 12.9473 8.36739 13 8.5 13H9.62C9.73283 13.4919 9.92863 13.9609 10.199 14.387L9.404 15.182C9.31026 15.2758 9.25761 15.4029 9.25761 15.5355C9.25761 15.6681 9.31026 15.7952 9.404 15.889L10.111 16.596C10.2048 16.6897 10.3319 16.7424 10.4645 16.7424C10.5971 16.7424 10.7242 16.6897 10.818 16.596L11.618 15.796C12.0422 16.0676 12.5096 16.2651 13 16.38V17.5C13 17.6326 13.0527 17.7598 13.1464 17.8536C13.2402 17.9473 13.3674 18 13.5 18H14.5C14.6326 18 14.7598 17.9473 14.8536 17.8536C14.9473 17.7598 15 17.6326 15 17.5V16.38C15.4919 16.2672 15.9609 16.0714 16.387 15.801L17.182 16.601C17.2758 16.6947 17.4029 16.7474 17.5355 16.7474C17.6681 16.7474 17.7952 16.6947 17.889 16.601L18.596 15.894C18.6897 15.8002 18.7424 15.6731 18.7424 15.5405C18.7424 15.4079 18.6897 15.2808 18.596 15.187L17.796 14.392C18.0686 13.9647 18.2662 13.4939 18.38 13H19.5C19.6326 13 19.7598 12.9473 19.8536 12.8536C19.9473 12.7598 20 12.6326 20 12.5V11.5C20 11.3674 19.9473 11.2402 19.8536 11.1464C19.7598 11.0527 19.6326 11 19.5 11ZM14 14.5C13.5055 14.5 13.0222 14.3534 12.6111 14.0787C12.2 13.804 11.8795 13.4135 11.6903 12.9567C11.5011 12.4999 11.4516 11.9972 11.548 11.5123C11.6445 11.0273 11.8826 10.5819 12.2322 10.2322C12.5819 9.8826 13.0273 9.6445 13.5123 9.54804C13.9972 9.45157 14.4999 9.50108 14.9567 9.6903C15.4135 9.87952 15.804 10.2 16.0787 10.6111C16.3534 11.0222 16.5 11.5055 16.5 12C16.5 12.663 16.2366 13.2989 15.7678 13.7678C15.2989 14.2366 14.663 14.5 14 14.5Z"
+                                        fill="currentColor" />
+                                </svg>
+                                <span class="text-hidden">Administrador</span>
+
+                            </li>
+                        </a>
+                        <a href="{% url 'PERF' user.id %}"
+                            class="text-sm custom-text-color flex items-center py-2 pl-3 pr-4 text-gray-900 rounded md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:border-gray-700">
+                            <li class="flex items-center p-2 rounded-md">
+                                <!-- PERFIL -->
+
+                                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
+                                    class="bi bi-person-circle mr-2" viewBox="0 0 16 16">
+                                    <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
+                                    <path fill-rule="evenodd"
+                                        d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z" />
+                                </svg>
+                                <span class="text-hidden">Perfil</span>
+
+                            </li>
+                        </a>
+                        <a href="{% url 'CERRAR' %}" type="button" id="salir"
+                            class="text-sm custom-text-color flex items-center py-2 pl-3 pr-4 text-gray-900 rounded md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:border-gray-700">
+                            <li class="flex items-center p-2 rounded-md">
+                                <!-- SALIR -->
+
+                                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
+                                    class="bi bi-box-arrow-right mr-2" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd"
+                                        d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z" />
+                                    <path fill-rule="evenodd"
+                                        d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z" />
+                                </svg>
+                                <span class="text-hidden">Salir</span>
+
+                            </li>
+                        </a>
+                        {% endif %}
+                        <li class="flex items-center p-2 rounded-md">
+                            <!-- BIENVENIDO -->
+                            <p style="color:rgb(255, 255, 255)"
+                                class="pr-4 text-sm custom-text-color flex items-center py-2 pl-3 pr-4 text-gray-900 rounded md:p-0 md:dark:hover:text-blue-500 dark:text-white dark:border-gray-700">
+                                Hola!!!
+                            <p class="text-sm flex items-center  pl-2 pr-4 text-yellow-300 "> {{ user.username }}</p>
+                            </p>
+                        </li>
+
+                    </ul>
+
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div style="min-height:  60vh;">
+        {% block contenido %}
+
+        {% endblock contenido %}
+    </div>
+
+    <!-- BOTON FLOTANTE PARA SUBIR ARRIBA DE LA PAGINA -->
+    <div id="botonArriba" data-dial-init class="fixed right-6 bottom-6">
+        <button type="button" aria-controls="speed-dial-menu-default" data-tooltip-target="tooltip-print"
+            aria-expanded="false"
+            class="flex items-center justify-center text-white bg-yellow-400 rounded-full w-14 h-14 hover:bg-yellow-400 dark:bg-yellow-600 dark:hover:bg-yellow-700 focus:ring-4 focus:ring-blue-300 focus:outline-none dark:focus:ring-yellow-800">
+            <svg class="w-5 h-5  aria-hidden=" true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 8">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M13 7 7.674 1.3a.91.91 0 0 0-1.348 0L1 7" />
+            </svg>
+        </button>
+    </div>
+    {% if user.is_staff >= 1 %}
+    <!-- BOTON FLOTANTE PARA SUBIR COSAS -->
+    <div data-dial-init class="fixed left-6 bottom-6 group">
+        <div id="speed-dial-menu-default" class="flex flex-col items-center hidden mb-4 space-y-2">
+            <div id="tooltip-share" role="tooltip"
+                class="absolute z-10 invisible inline-block w-auto px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                Share
+                <div class="tooltip-arrow" data-popper-arrow></div>
+            </div>
+            <!-- BOTON DE CALENDARIO -->
+            <a href="{% url 'CREA_EVE' user.id %}">
+                <button type="button" data-tooltip-target="tooltip-print" data-tooltip-placement="left"
+                    class="flex justify-center items-center w-[52px] h-[52px] text-blue-800 hover:text-blue-900 bg-white rounded-full border border-blue-200 dark:border-blue-600 shadow-sm dark:hover:text-white dark:text-blue-400 hover:bg-blue-50 dark:bg-blue-700 dark:hover:bg-blue-600 focus:ring-4 focus:ring-blue-300 focus:outline-none dark:focus:ring-blue-400">
+                    <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                        viewBox="0 0 20 20">
+                        <path
+                            d="M0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm14-7.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm0 4a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm-5-4a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm0 4a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm-5-4a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1Zm0 4a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5v-1ZM20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4Z" />
+                    </svg>
+                    <span class="sr-only">Nuevo Evento</span>
+                </button>
+            </a>
+            <div id="tooltip-print" role="tooltip"
+                class="absolute z-10 invisible inline-block w-auto px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                Nuevo Evento
+                <div class="tooltip-arrow" data-popper-arrow></div>
+            </div>
+            <!-- BOTON DE ENCUESTA -->
+            <a href="{% url 'CREA_ENC' user.id %}">
+                <button type="button" data-tooltip-target="tooltip-download" data-tooltip-placement="left"
+                    class="flex justify-center items-center w-[52px] h-[52px] text-blue-800 hover:text-blue-900 bg-white rounded-full border border-blue-200 dark:border-blue-600 shadow-sm dark:hover:text-white dark:text-blue-400 hover:bg-blue-50 dark:bg-blue-700 dark:hover:bg-blue-600 focus:ring-4 focus:ring-blue-300 focus:outline-none dark:focus:ring-blue-400">
+                    <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                        viewBox="0 0 16 20">
+                        <path
+                            d="M16 14V2a2 2 0 0 0-2-2H2a2 2 0 0 0-2 2v15a3 3 0 0 0 3 3h12a1 1 0 0 0 0-2h-1v-2a2 2 0 0 0 2-2ZM4 2h2v12H4V2Zm8 16H3a1 1 0 0 1 0-2h9v2Z" />
+                    </svg>
+                    <span class="sr-only">Nueva Encuesta</span>
+                </button>
+            </a>
+            <div id="tooltip-download" role="tooltip"
+                class="absolute z-10 invisible inline-block w-auto px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                Nueva Encuesta
+                <div class="tooltip-arrow" data-popper-arrow></div>
+            </div>
+            <!-- BOTON DE NUEVA PUBLICACION -->
+            <a href="{% url 'CREA_PUBL' user.id %}">
+                <button type="button" data-tooltip-target="tooltip-copy" data-tooltip-placement="left"
+                    class="flex justify-center items-center w-[52px] h-[52px] text-blue-800 hover:text-blue-900 bg-white rounded-full border border-blue-200 dark:border-blue-600 shadow-sm dark:hover:text-white dark:text-blue-400 hover:bg-blue-50 dark:bg-blue-700 dark:hover:bg-blue-600 focus:ring-4 focus:ring-blue-300 focus:outline-none dark:focus:ring-blue-400">
+                    <svg class="w-5 h-5" text-gray-800 dark:text-white" aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 14 20">
+                        <path
+                            d="M13.383.076a1 1 0 0 0-1.09.217L11 1.586 9.707.293a1 1 0 0 0-1.414 0L7 1.586 5.707.293a1 1 0 0 0-1.414 0L3 1.586 1.707.293A1 1 0 0 0 0 1v18a1 1 0 0 0 1.707.707L3 18.414l1.293 1.293a1 1 0 0 0 1.414 0L7 18.414l1.293 1.293a1 1 0 0 0 1.414 0L11 18.414l1.293 1.293A1 1 0 0 0 14 19V1a1 1 0 0 0-.617-.924ZM10 15H4a1 1 0 1 1 0-2h6a1 1 0 0 1 0 2Zm0-4H4a1 1 0 1 1 0-2h6a1 1 0 1 1 0 2Zm0-4H4a1 1 0 0 1 0-2h6a1 1 0 1 1 0 2Z" />
+                    </svg>
+                    <span class="sr-only">Nueva Publicacion</span>
+                </button>
+            </a>
+            <div id="tooltip-copy" role="tooltip"
+                class="absolute z-10 invisible inline-block w-auto px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                Nueva Publicacion
+                <div class="tooltip-arrow" data-popper-arrow></div>
+            </div>
+        </div>
+        <button type="button" data-dial-toggle="speed-dial-menu-default" aria-controls="speed-dial-menu-default"
+            aria-expanded="false"
+            class="flex items-center justify-center text-white bg-yellow-400 rounded-full w-14 h-14 hover:bg-yellow-400 dark:bg-yellow-600 dark:hover:bg-yellow-700 focus:ring-4 focus:ring-blue-300 focus:outline-none dark:focus:ring-yellow-800">
+            <svg class="w-5 h-5 transition-transform group-hover:rotate-45" aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 18">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M9 1v16M1 9h16" />
+            </svg>
+            <span class="sr-only">Open actions menu</span>
+        </button>
+    </div>
+    {% endif %}
+    <!-- INICIO DE FOOTER -->
+
+
+    <!-- FIN DE FOOTER -->
+</body>
+<footer class="bg-custom-navbar text-white">
+    <div class="mx-auto w-full max-w-screen-xl p-4 py-6 lg:py-8">
+        <div class="md:flex md:justify-between pb-6">
+
+            <a href="{% url 'HOME' %}" class="flex items-center">
+                <img src="{% static '/img/logo_socialduoc_white.png' %}" class="h-12 mr-12" />
+            </a>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 sm:gap-6">
+            <div>
+                <h2 class="mb-6 text-sm font-semibold text-gray-50 uppercase dark:text-white">Nosotros</h2>
+                <ul class="text-gray-500 dark:text-gray-400 font-medium" style="text-align: justify;">
+                    <li class="mb-4">
+                        <p>
+                            Social Duoc es una red social que busca facilitar y mejorar la comunicación que existe entre
+                            los
+                            usuarios pertenecientes al establecimiento DuocUC.
+                        </p>
+                    </li>
+                </ul>
+            </div>
+            <div>
+                <h2 class="mb-6 text-sm font-semibold text-gray-50 uppercase dark:text-white">Mesa de Servicios</h2>
+                <ul class="text-gray-500 dark:text-gray-400 font-medium">
+                    <li class="mb-4">
+                        <p>(+56) 44220 1098</p>
+                    </li>
+                    <li>
+                        <p>(+56) 227120245</p>
+                    </li>
+                </ul>
+            </div>
+            <div>
+                <h2 class="mb-6 text-sm font-semibold text-gray-50 uppercase dark:text-white">Cursos y Diplomados</h2>
+                <ul class="text-gray-500 dark:text-gray-400 font-medium">
+                    <li class="mb-4">
+                        (+56) 442201096
+                    </li>
+                    <li>
+                        (+56) 227120246
+                    </li>
+                </ul>
+            </div>
+            <div>
+                <h2 class="mb-6 text-sm font-semibold text-gray-50 uppercase dark:text-white">Contacto</h2>
+                <ul class="text-gray-500 dark:text-gray-400 font-medium">
+                    <li class="mb-4">
+                        <div class="flex items-center">
+                            <svg class="w-6 h-6 text-gray-50 dark:text-white" aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                <path
+                                    d="m19.707 9.293-2-2-7-7a1 1 0 0 0-1.414 0l-7 7-2 2a1 1 0 0 0 1.414 1.414L2 10.414V18a2 2 0 0 0 2 2h3a1 1 0 0 0 1-1v-4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v4a1 1 0 0 0 1 1h3a2 2 0 0 0 2-2v-7.586l.293.293a1 1 0 0 0 1.414-1.414Z" />
+                            </svg>
+                            <span class="ml-4">Puente Alto</span>
+                        </div>
+                    </li>
+                    <li class="mb-4">
+                        <div class="flex items-center">
+                            <svg class="w-6 h-6 text-gray-50 dark:text-white" aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                <path
+                                    d="m10.036 8.278 9.258-7.79A1.979 1.979 0 0 0 18 0H2A1.987 1.987 0 0 0 .641.541l9.395 7.737Z" />
+                                <path
+                                    d="M11.241 9.817c-.36.275-.801.425-1.255.427-.428 0-.845-.138-1.187-.395L0 2.6V14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2.5l-8.759 7.317Z" />
+                            </svg>
+                            <span class="ml-4">ucsocialduoc@gmail.com</span>
+                        </div>
+                    </li>
+
+                    <li class="mb-4">
+                        <div class="flex items-center">
+                            <svg class="w-6 h-6 text-gray-50 dark:text-white" aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                <path
+                                    d="M18 13.446a3.02 3.02 0 0 0-.946-1.985l-1.4-1.4a3.054 3.054 0 0 0-4.218 0l-.7.7a.983.983 0 0 1-1.39 0l-2.1-2.1a.983.983 0 0 1 0-1.389l.7-.7a2.98 2.98 0 0 0 0-4.217l-1.4-1.4a2.824 2.824 0 0 0-4.218 0c-3.619 3.619-3 8.229 1.752 12.979C6.785 16.639 9.45 18 11.912 18a7.175 7.175 0 0 0 5.139-2.325A2.9 2.9 0 0 0 18 13.446Z" />
+                            </svg>
+                            <span class="ml-4">+56267058209</span>
+                        </div>
+                    </li>
+                    <li class="mb-4">
+                        <div class="flex items-center">
+                            <svg class="w-6 h-6 text-gray-50 dark:text-white" aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M1 14h12M1 4h12M6.5 16.5h1M2 1h10a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1Z" />
+                            </svg>
+                            <span class="ml-4">+56967058069</span>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <hr class="my-6 border-gray-200 sm:mx-auto dark:border-gray-700 lg:my-8" />
+        <div class="flex items-center justify-between">
+            <span class="text-sm text-gray-50 sm:text-center dark:text-gray-50">© 2023 <a href="https://www.duoc.cl/"
+                    class="hover:underline">Duoc Uc</a>. Todos los derechos reservados.
+            </span>
+            <div class="flex mt-4 space-x-5 sm:justify-center sm:mt-0">
+                <!-- ... Tus enlaces a redes sociales ... -->
+            </div>
+            <div class="flex mt-4 space-x-5 sm:justify-center sm:mt-0">
+                <a href="https://web.facebook.com/DuocUC/?_rdc=1&_rdr"
+                    class="text-gray-50 hover:text-gray-50 dark:hover:text-white">
+                    <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                        viewBox="0 0 8 19">
+                        <path fill-rule="evenodd"
+                            d="M6.135 3H8V0H6.135a4.147 4.147 0 0 0-4.142 4.142V6H0v3h2v9.938h3V9h2.021l.592-3H5V3.591A.6.6 0 0 1 5.592 3h.543Z"
+                            clip-rule="evenodd" />
+                    </svg>
+                    <span class="sr-only">Facebook page</span>
+                </a>
+                <a href="https://twitter.com/DuocUC" class="text-gray-50 hover:text-gray-50 dark:hover:text-white">
+                    <svg class="w-4 h-4 aria-hidden=" true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                        viewBox="0 0 20 20">
+                        <path stroke="currentColor"
+                            d="M12.186 8.672 18.743.947h-2.927l-5.005 5.9-4.44-5.9H0l7.434 9.876-6.986 8.23h2.927l5.434-6.4 4.82 6.4H20L12.186 8.672Zm-2.267 2.671L8.544 9.515 3.2 2.42h2.2l4.312 5.719 1.375 1.828 5.731 7.613h-2.2l-4.699-6.237Z" />
+                    </svg>
+                    <span class="sr-only">Twitter page</span>
+                </a>
+                <a href="https://www.youtube.com/user/DuocUCvideos"
+                    class="text-gray-50 hover:text-gray-50 dark:hover:text-white">
+                    <svg class="w-4 h-4 aria-hidden=" true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                        viewBox="0 0 20 14">
+                        <path fill-rule="evenodd"
+                            d="M19.7 3.037a4.26 4.26 0 0 0-.789-1.964 2.84 2.84 0 0 0-1.984-.84c-2.767-.2-6.926-.2-6.926-.2s-4.157 0-6.928.2a2.836 2.836 0 0 0-1.983.84A4.225 4.225 0 0 0 .3 3.038a30.148 30.148 0 0 0-.2 3.206v1.5c.01 1.071.076 2.142.2 3.206.094.712.363 1.39.784 1.972.604.536 1.38.837 2.187.848 1.583.15 6.731.2 6.731.2s4.161 0 6.928-.2a2.844 2.844 0 0 0 1.985-.84 4.27 4.27 0 0 0 .787-1.965c.124-1.064.19-2.135.2-3.206V6.243a30.672 30.672 0 0 0-.202-3.206ZM8.008 9.59V3.97l5.4 2.819-5.4 2.8Z"
+                            clip-rule="evenodd" />
+                    </svg>
+                    <span class="sr-only">Youtube page</span>
+                </a>
+                <a href="https://www.linkedin.com/company/duocuc/"
+                    class="text-gray-50 hover:text-gray-50 dark:hover:text-white">
+                    <svg class="w-4 h-4 aria-hidden=" true" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                        viewBox="0 0 15 15">
+                        <path fill-rule="evenodd"
+                            d="M7.979 5v1.586a3.5 3.5 0 0 1 3.082-1.574C14.3 5.012 15 7.03 15 9.655V15h-3v-4.738c0-1.13-.229-2.584-1.995-2.584-1.713 0-2.005 1.23-2.005 2.5V15H5.009V5h2.97ZM3 2.487a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z"
+                            clip-rule="evenodd" />
+                        <path d="M3 5.012H0V15h3V5.012Z" />
+                    </svg>
+                    <span class="sr-only">Linkedin page</span>
+                </a>
+
+            </div>
+        </div>
+
+</footer>
+<script>
+    $(document).ready(function () {
+        $('#select_usuarios').on('change', function () {
+            var selectedOption = $(this).find(':selected');
+            var url = selectedOption.data('url');
+
+            if (url) {
+                window.location.href = url;
+            }
+        });
+    });
+</script>
+<script>
+    // Obtener el checkbox
+    var checkbox = document.querySelector("input[name='estado']");
+
+    // Escuchar cambios en el checkbox
+    checkbox.addEventListener("change", function () {
+        var hiddenInput = document.querySelector("input[type='hidden'][name='estado']");
+        if (checkbox.checked) {
+            hiddenInput.value = "1";
+        } else {
+            hiddenInput.value = "2";
+        }
+    });
+</script>
+
+<script>
+    $(document).ready(function () {
+        $('#select_usuarios').select2();
+    });
+</script>
+<style>
+    /* Aplica un color de texto negro al input del campo de selección de Select2 */
+    .select2-container .select2-selection--single .select2-selection__rendered,
+    .select2-container .select2-search--dropdown .select2-search__field {
+        color: black !important;
+    }
+
+    .select2-results li {
+        color: black !important;
+    }
+
+    .select2-search__field {
+        color: black !important;
+    }
+</style>
+<!-- JS -->
+{% block js %}
+
+{% endblock %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/flowbite.min.js"></script>
+<script src="{% static '/js/scriptBotonSubir.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+</html>

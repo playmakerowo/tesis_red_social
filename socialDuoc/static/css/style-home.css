@@ -1,0 +1,151 @@
+a {
+  text-decoration: none;
+  font-size: 17px;
+}
+
+p {
+  font-size: 17px;
+}
+
+a:hover {
+
+  color: #F1C40F !important;
+}
+
+i {
+  font-size: 25px;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: rgba(255, 0, 0, 0);
+  font-family: 'Montserrat', sans-serif;
+}
+
+.content {
+  flex: 1;
+}
+
+
+.menu {
+  position: fixed;
+}
+
+
+/* Define la clase personalizada para el fondo negro del navbar */
+.bg-custom-navbar {
+  background-color: black;
+}
+
+/* Define la clase personalizada para el fondo negro */
+.custom-bg-color {
+  background-color: black;
+}
+
+.custom-text-color {
+  color: white;
+  transition: background-color 0.3s;
+}
+
+/* Agrega el efecto hover en amarillo */
+.custom-text-color:hover {
+  color: black;
+  /* Cambia el color de texto al que prefieras */
+}
+
+.custom-font-normal {
+  font-weight: normal;
+}
+
+.boton {
+  align-items: center;
+  justify-content: end;
+  width: 100%;
+}
+
+.editar {
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  width: 100%;
+
+}
+
+@media (max-width: 900px) {
+  a.card-link span {
+    display: none;
+  }
+}
+
+/* Estilos generales para el div */
+.publiacion-card {
+  width: 100%;
+}
+
+/* Media query para tamaños de pantalla más pequeños (teléfonos) */
+@media only screen and (max-width: 759px) {
+  .publiacion-card {
+    /* Estilos específicos para teléfonos */
+    max-width: 22rem;
+    width: 22rem;
+  }
+
+  .texto-ocultable {
+    display: none;
+  }
+
+  .boton-separable {
+    margin: 1rem;
+  }
+}
+
+.zoomable-image {
+  transition: transform 0.3s ease-in-out; /* Agrega una transición suave */
+}
+
+.zoomable-image:hover {
+  transform: scale(1.1); /* Puedes ajustar el valor según el efecto deseado */
+}
+
+.perfil-container {
+  position: relative;
+  display: inline-block, flex;
+  cursor: pointer;
+}
+
+.perfil-pequeno {
+  position: absolute;
+  z-index: 10;
+  visibility: hidden;
+  width: 17rem;
+  /* Ajusta el ancho según sea necesario */
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 0.375rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+  transition: opacity 0.3s;
+  opacity: 0;
+}
+
+.perfil-pequeno:before {
+  content: '';
+  position: absolute;
+  top: -0.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 0.5rem 0.5rem 0;
+  /* Tamaño del triángulo */
+  border-style: solid;
+  border-color: #fff transparent transparent transparent;
+}
+
+.perfil-container:hover .perfil-pequeno,
+.perfil-pequeno:hover {
+  visibility: visible;
+  opacity: 1;
+}

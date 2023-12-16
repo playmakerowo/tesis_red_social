@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+{% load static %}
+<!-- ESTILO CSS -->
+{% block css %}
+<link rel="stylesheet" href="{% static '/css/style_chat.css' %}">
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+{% endblock css %}
+
+{% block contenido %}
+<div class="flex items-center justify-center scale-up-center">
+    <div class="w-11/12 sm:p-8 bg-white m-4 rounded-lg">
+        <div class="h-auto max-w-xl p-4">
+            <div>
+                <!--Inicio Titulo-->
+                <div class="relative z-0 w-full mb-6 group">
+                    <p class="text-2xl font-bold dark:text-white"> {{ seccion.0.nombre_ramo }} </p>
+                    <p class="text-xl font-bold dark:text-white">{{ seccion.0.nombre }}</p>
+                </div>
+            </div>
+            <!--Fin Titulo-->
+            <!--Inicio espacio tabla-->
+            <div class="justify-center rounded dark:bg-gray-800">
+                <!--Usuario-->
+                <input type="text" name="id" value="" style="display: none;">
+                <label for="name" class="block mb-2 text-sm font-medium dark:text-white">Agregar
+                    participante a {{ seccion.0.nombre }}</label>
+
+                <div class="relative">
+                    <form action="" class="agregar" id="agregar">
+                        {% csrf_token %}
+                        <input type="text" name="id_seccion" id="id_seccion" value="{{seccion.0.id_seccion}}" hidden>
+                        <select id="select_usuarios" name="id_usuario" class="select2">
+                            <option value="" selected disabled>Selecciona un usuario</option>
+
+                            {% for user in usuarios %}
+
+                            <option value="{{ user.id_usuario }}">{{user.Nombre}} </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                        <button type="submit" name="accion" value="agregar" id="btnAgregar"
+                            class="inline-flex items-center px-4 py-1 text-sm text-white rounded-lg bg-blue-700 hover:bg-blue-800 mt-2">
+                            <i class="fa fa-user-plus fa-xs mr-2"></i>Añadir</button>
+                    </form>
+                </div>
+                <!--Participantes seccion-->
+                <div class="relative w-full mb-2 group">
+                    <p class="text-m font-bold dark:text-white mt-4">Participantes actuales</p>
+                </div>
+                <div class="w-auto h-14 bg-gray-900 rounded-t-lg flex justify-center items-center">
+                    <div class="absolute z-10 w-auto">
+                        <input type="text" name="buscador" id="buscador" placeholder="Buscar" class="border-gray-300 rounded-full m-2">
+                    </div>
+                </div>
+                <div class="bg-gray-900 rounded-b-lg" style="height: 400px; max-height: 400px; overflow-y: auto;">
+                    <!--Buscar en participantes-->
+
+
+                    <!--Lista de participantes-->
+                    <ul id="userList" class="p-2 divide-y text-white z-0">
+                        {% for usuario_registrado in usuarios_registrados %}
+                        <li class="flex item py-2 justify-between relative w-full hover:bg-gray-800 rounded">
+                            <a href="{% url 'PER_USU' usuario_registrado.id_usuario %}">
+                                <div class="flex items-center p-2 cursor-pointer">
+                                    {% if usuario_registrado.foto == '0' %}
+                                    <img class="h-10 w-10 rounded-full" src="{% static '/img/user.jpg' %}">
+                                    {% else %}
+                                    <img class="h-10 w-10 rounded-full"
+                                        src="data:image/png;base64, {{usuario_registrado.foto}}">
+                                    {% endif %}
+                                    <div class="ml-2 overflow-hidden">
+                                        <p class="text-sm font-medium text-slate-900">{{usuario_registrado.nombre}}</p>
+                                        <p class="text-sm text-slate-500 truncate correo-hidden">
+                                            {{usuario_registrado.correo}}
+                                        </p>
+                                    </div>
+                                </div>
+                            </a>
+                            <form action="" class="eliminar" id="eliminar_{{usuario_registrado.id_usuario}}">
+                                {% csrf_token %}
+                                <input type="text" name="id_seccion" id="id_seccion" value="{{seccion.0.id_seccion}}"
+                                    hidden>
+                                <input type="text" name="id_usuario" id="id_usuario"
+                                    value="{{usuario_registrado.id_usuario}}" hidden>
+                                <button type="submit" name="accion" value="eliminar_{{usuario_registrado.id_usuario}}"
+                                    class="text-white bg-red-600 rounded-lg px-2 m-2 p-2 hover:bg-red-900">
+                                    <i class="fa fa-trash fa-lg" aria-hidden="true"></i>
+                                </button>
+                            </form>
+                        </li>
+
+                        {% endfor %}
+                    </ul>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    @media (max-width: 700px) {
+        .correo-hidden {
+            display: none;
+        }
+    }
+</style>
+<script type="text/javascript" src="{% static 'js/seccion_modificar.js' %}"></script>
+
+{% endblock contenido %}

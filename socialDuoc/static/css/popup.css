@@ -1,0 +1,52 @@
+.overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 1;
+}
+
+/* Estilo de la ventana emergente */
+.popup {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fff;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    z-index: 2;
+    max-height: 80%;
+    /* Ajusta la altura máxima según tus necesidades */
+    overflow-y: auto;
+    /* Agrega desplazamiento vertical si se supera la altura máxima */
+}
+
+
+.popup h2 {
+    margin-top: 0;
+}
+
+/* Estilo del botón para cerrar la ventana emergente */
+.close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.contenedor{
+    width: 20rem; 
+    min-height: 15rem;
+    margin: 1rem;
+    padding: 1rem;
+}
+
+.participantes{
+    padding: 0.2rem;
+}

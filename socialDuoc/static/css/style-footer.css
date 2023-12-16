@@ -1,0 +1,24 @@
+/* Small screens (mobile) */
+@media (max-width: 640px) {
+    .bg-custom-navbar {
+        padding: 2rem; /* Adjust padding for smaller screens */
+    }
+    
+    /* Adjust grid columns for smaller screens */
+    .grid-cols-5 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+/* Medium screens (tablet) */
+@media (min-width: 301px) and (max-width: 1024px) {
+    .bg-custom-navbar {
+        padding: 4rem; /* Adjust padding for medium screens */
+    }
+}
+
+/* Large screens (desktop) */
+@media (min-width: 1025px) {
+    /* You can add more adjustments for large screens if needed */
+}
+

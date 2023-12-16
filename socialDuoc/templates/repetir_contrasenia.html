@@ -1,0 +1,72 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- NOMBRE PAGINA -->
+    <title>Inicio</title>
+    <!-- FLOWBITE -->
+    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/flowbite@1.5.3/dist/flowbite.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/flowbite@1.5.3/dist/flowbite.min.css" />
+    <!-- FUENTE -->
+    <link rel="preconnect" href="https://fonts.googleapis.com'">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+    <!-- ESTILO CSS-->
+    <link rel="stylesheet" href="{% static '/css/style-general.css' %}">
+    <!-- CAPTACHA-->
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+</head>
+
+<body>
+    {% block contenido_login %}
+    <!-- BODY Cuerpo de pagina -->
+    <div>
+        <!-- Tarjeta Inicio de Sesión -->
+        <div class="flex justify-center items-center min-h-screen scale-up-center">
+            <div class="w-full max-w-sm p-4 bg-black rounded-lg shadow sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700">
+                <p class="text-2xl flex justify-center items-center" style="color: white;" >Cambiar Contraseña</p>
+                <form class="space-y-8 w-full" method="post"> <!-- Agregamos la clase w-full para que ocupe todo el ancho -->
+                    {% csrf_token %}
+                    {{ form.non_field_errors }}
+                    
+                    
+                    <div>
+                        <label for="{{ form.current_password.id_for_label }}" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" style="color: white;">{{ form.current_password.label_tag }}</label>
+                        {{ form.current_password }}
+                    </div>
+                    
+                    <div>
+                        <label for="{{ form.new_password.id_for_label }}" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" style="color: white;">{{ form.new_password.label_tag }}</label>
+                        {{ form.new_password }}
+                    </div>
+                    
+                    <div>
+                        <label for="{{ form.confirm_password.id_for_label }}" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" style="color: white;">{{ form.confirm_password.label_tag }}</label>
+                        {{ form.confirm_password }}
+                    </div>
+                    
+                    <button type="submit" class="mt-4 w-full text-white bg-blue-700 hover-bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover-bg-blue-700 dark:focus:ring-blue-800">Cambiar Contraseña</button>
+                </form>
+                {% if messages %}
+                <ul class="messages" style="color: white;">
+                    {% for message in messages %}
+                    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
+        </div>
+        <!-- FIN BODY Cuerpo de página -->
+    </div>
+    
+
+    {% endblock contenido_login %}
+</body>
+
+</html>

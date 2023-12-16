@@ -1,0 +1,1075 @@
+{% extends "base.html" %}
+{% load static %}
+{% block css %}
+<link href="https://vjs.zencdn.net/7.15.4/video-js.css" rel="stylesheet">
+<script src="https://vjs.zencdn.net/7.15.4/video.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+{% endblock css %}
+
+
+{% block contenido %}
+<section>
+    <!-- Inicio CUERPO PAGINA -->
+    <div class="content">
+        {% if mensaje %}
+        <div id="targetElement"
+            class="flex items-center p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400"
+            role="alert">
+            <svg class="flex-shrink-0 inline w-4 h-4 mr-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                fill="currentColor" viewBox="0 0 20 20">
+                <path
+                    d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+            </svg>
+            <span class="sr-only">Info</span>
+            <div>
+                <span class="font-medium">{{mensaje}}</span>
+            </div>
+        </div>
+        {% endif %}
+        <!-- DATOS USUARIO INVISIBLE -->
+        <div hidden>
+            {% for User in usuario %}
+            <img id="imagen" name="imagen" class="imagen rounded-full w-10 h-10"
+                src="data:image/png;base64, {{User.9}}">
+            {% if User.9 != '0' %}
+            <input id="ruta_imagen" name="ruta_imagen" class="ruta_imagen" value="data:image/png;base64, {{User.9}}">
+            {% else %}
+            <input type="text" id="ruta_imagen" name="ruta_imagen" class="ruta_imagen"
+                value="{% static '/img/user.jpg' %}">
+
+            {% endif %}
+            <input type="text" id="nombre" name="nombre" class="nombre" value="{{User.2}} {{User.3}}">
+            <input type="text" id="user_id" name="user_id" class="user_id" value="{{user.id}}">
+
+            {% endfor %}
+            <div class="font-medium dark:text-white">
+                <div>{{publis.1}}</div>
+            </div>
+        </div>
+
+        <div class="p-1">
+            <div>
+                <div
+                    class="mb-4 mt-2 flex justify-center w-full rounded-lg sm:p-6 dark:bg-gray-800 dark:border-gray-700">
+                    <div style="background-color:white; padding: 1rem;"
+                        class="publiacion-card flex justify-center w-full rounded-lg shadow sm:p-6 dark:bg-gray-800 dark:border-gray-700 h-auto max-w-xl border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700 scale-up-center">
+                        <div class="w-full">
+                            <p class="text-base flex items-center pb-2">Buscar publicacion <button class="pl-2"
+                                    data-popover-target="popover-description2" data-popover-placement="bottom-start"
+                                    type="button">
+                                    <svg class="w-4 h-4 ms-2 text-gray-400 hover:text-gray-500 " aria-hidden="true"
+                                        fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                            d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                                    </svg><span class="sr-only">Show information</span></button></p>
+                            <div data-popover id="popover-description2" role="tooltip"
+                                class="absolute z-10 invisible inline-block text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 w-96 dark:text-gray-400 dark:bg-gray-800 dark:border-gray-600">
+                                <div class="grid grid-cols-8">
+                                    <div class="col-span-6 p-4">
+                                        <h3 class="font-semibold text-base text-gray-900 dark:text-white">Información
+                                        </h3>
+                                        <li>Aqui podras buscar la publicacion que desees, en tiempo real (Cargaran segun
+                                            lo que escribas).</li>
+                                        <li>
+                                            Recuerda que los eventos y encuestas, se archivan una vez superado el tiempo
+                                            estipulado, por lo cual no apareceran al buscarlas.
+                                        </li>
+                                    </div>
+                                </div>
+                                <div data-popper-arrow></div>
+                            </div>
+                            </p>
+                            <input type="text" id="buscador" class="rounded-lg w-full border-gray-300"
+                                placeholder="Buscador...">
+                            <select id="filtroSede" class="rounded-lg w-full mt-2 border-gray-300">
+                                <option class="sede-boton" value="">Limpiar filtro sede</option>
+                                {% for sede in sedes %}
+                                <option class="sede-boton" value="{{sede.1}}">{{sede.1}} </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="seccion-publicaciones ">
+                <ul class="lista-contenido">
+                    {% for cont in contenido %}
+                    <li class="publicacion">
+                        <!-- PUBLICACION -->
+                        {% if cont.tipo == "1" %}
+                        <div data-id="{{ cont.id_publicacion }}" class="publicacion mb-4 mt-2 sm:p-4 dark:bg-gray-900 scale-up-center"
+                            style="display: block;">
+                            <div class="flex justify-center">
+                                <div class="publiacion-card w-full h-auto max-w-xl border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700 scale-up-center"
+                                    style="color:rgb(0, 0, 0)">
+                                    <!-- SECCION DE USUARIO QUE SUBE PUBLICACION -->
+                                    <div
+                                        class="bg-white p-5 w-full max-w-xl pb-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700">
+                                        <div class=" flex items-center justify-between pb-4">
+                                            <!-- IMAGEN Y NOMBRE USUARIO -->
+                                            <a href="{% url 'PER_USU' cont.id_usuario %}">
+                                                <div class="perfil-container flex items-center space-x-4"
+                                                    onmouseover="showTooltip()">
+                                                    {% if cont.foto_usuario != '0' %}
+                                                    <img class="rounded-full w-10 h-10"
+                                                        src="data:image/png;base64, {{ cont.foto_usuario }}"
+                                                        alt="Imagen">
+                                                    {% else %}
+                                                    <img class="rounded-full w-10 h-10"
+                                                        src="{% static 'img/user.jpg' %}" alt="Imagen Predeterminada">
+                                                    {% endif %}
+                                                    <!-- SECCION POPOVER DE PERFIL -->
+                                                    <div class="font-medium dark:text-white">
+                                                        <div class="font-semibold hover:underline">
+                                                            {{cont.nombre_usuario}}</div>
+                                                        <div class="text-gray-400">@{{cont.usuario}}</div>
+                                                        <div class="perfil-pequeno" onmouseover="clearHideTimeout()"
+                                                            onmouseout="startHideTimeout()">
+                                                            <div class="p-0 ">
+                                                                <div class="flex items-center mb-0">
+                                                                    {% if cont.foto_usuario != '0' %}
+                                                                    <img class="rounded-full w-10 h-10"
+                                                                        src="data:image/png;base64, {{ cont.foto_usuario }}"
+                                                                        alt="Imagen">
+                                                                    {% else %}
+                                                                    <img class="rounded-full w-10 h-10"
+                                                                        src="{% static 'img/user.jpg' %}"
+                                                                        alt="Imagen Predeterminada">
+                                                                    {% endif %}
+
+                                                                    <div class="ml-4 flex flex-col justify-between">
+                                                                        <p
+                                                                            class="text-base font-semibold leading-none text-gray-900 dark:text-white">
+                                                                            {{cont.nombre_usuario}}
+                                                                        </p>
+
+                                                                        <p
+                                                                            class="text-base font-normal text-yellow-400">
+                                                                            @{{cont.usuario}}
+                                                                        </p>
+                                                                    </div>
+                                                                </div>
+                                                                <hr
+                                                                    class="h-px my-4 bg-gray-200 border-0 dark:bg-gray-700">
+                                                                <div
+                                                                    class="flex justify-center items-center mt-4 space-x-3 md:mt-6">
+                                                                    <button type="button"
+                                                                        class="text-xs text-gray-900 bg-gradient-to-r from-red-200 via-red-300 to-yellow-200 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-red-100 dark:focus:ring-red-400 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">Ver
+                                                                        perfil</button>
+                                                                    <form method="post" action="{% url 'crear_chat' %}">
+                                                                        {% csrf_token %}
+                                                                        <input type="hidden" name="usuario_id"
+                                                                            value="{{ cont.id_usuario }}">
+                                                                        {% if user.id != cont.id_usuario %}
+                                                                        <button type="submit"
+                                                                            class="text-xs text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">Crear
+                                                                            Mensaje</button>
+                                                                        {% endif %}
+
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                            <!-- BOTON DE EDITAR -->
+                                            <div>
+                                                {% if user.id == cont.id_usuario %}
+                                                <a href="{% url 'EDI_PUBLI' cont.id_publicacion %}">
+                                                    <button type="button" class="ms-1 right-6 bottom-6 text-blue-900 ">
+                                                        <svg class="w-5 h-5 flex items-center justify-center hover:text-blue-700"
+                                                            aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                                            fill="currentColor" viewBox="0 0 20 18">
+                                                            <path
+                                                                d="M12.687 14.408a3.01 3.01 0 0 1-1.533.821l-3.566.713a3 3 0 0 1-3.53-3.53l.713-3.566a3.01 3.01 0 0 1 .821-1.533L10.905 2H2.167A2.169 2.169 0 0 0 0 4.167v11.666A2.169 2.169 0 0 0 2.167 18h11.666A2.169 2.169 0 0 0 16 15.833V11.1l-3.313 3.308Zm5.53-9.065.546-.546a2.518 2.518 0 0 0 0-3.56 2.576 2.576 0 0 0-3.559 0l-.547.547 3.56 3.56Z" />
+                                                            <path
+                                                                d="M13.243 3.2 7.359 9.081a.5.5 0 0 0-.136.256L6.51 12.9a.5.5 0 0 0 .59.59l3.566-.713a.5.5 0 0 0 .255-.136L16.8 6.757 13.243 3.2Z" />
+                                                        </svg>
+                                                    </button>
+                                                </a>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <!-- FECHA y SEDE -->
+                                        <div class="flex justify-between">
+                                            <p>{{cont.fecha}}</p>
+                                            <p>{{cont.sede}}</p>
+                                        </div>
+
+
+                                        <!-- IMAGEN PUBLICACION -->
+                                        <div class="p-6 flex items-center justify-center">
+                                            <figure class="max-w-lg">
+                                                <img class="rounded-lg w-full h-auto zoomable-image"
+                                                    src="data:image/png;base64, {{cont.foto_publicacion}}" alt="Imagen">
+                                            </figure>
+                                        </div>
+
+                                        <!-- DESCRIPCION -->
+                                        <p class="descripcion mb-3 font-normal text-white-700 dark:text-white-400"
+                                            style="margin-top: 20px; word-wrap: break-word;">{{cont.descripcion}}
+                                        </p>
+
+                                        <!-- CONTADOR LIKE  -->
+                                        <label id="cantidadLike" for="contadorLikes_{{ cont.id_publicacion }}"
+                                            data-id="{{ cont.id_publicacion }}"
+                                            class="cantidadLike block mb-2 text-lg font-medium text-white-900 dark:text-white-300"
+                                            data-count="{{ cont.like_count }}">{{ cont.like_count }}
+                                            Me gusta</label>
+
+                                        <!-- SECCION BOTONES -->
+                                        <section class="botones">
+                                            <div class="flex justify-center w-full bg-white border border-gray-200 rounded-lg sm:p-0 p-2 dark:bg-gray-800 dark:border-gray-700">
+                                                <!-- LIKE BOTON -->
+                                                <div
+                                                    class="boton-separable m-0 p-2 d-flex align-items-center justify-content-center">
+                                                    <form action="{% url 'agregar_like_publi' %}"
+                                                        id="agregar_like_publi" class="agregar_like_publis">
+                                                        {% csrf_token %}
+                                                        <input type="text" id="contadorLikes"
+                                                            data-id="{{ cont.id_publicacion }}" class="contadorLikes"
+                                                            name="contadorLikes" value="{{ cont.like_count }}" hidden>
+                                                        <input type="text" class="id_usuario" id="id_usuario"
+                                                            name="id_usuario" value="{{ cont.id_usuario }}" hidden>
+                                                        <input type="text" class="id_publi" id="id_publi"
+                                                            name="id_publi" value="{{ cont.id_publicacion  }}" hidden>
+
+                                                        <button type="submit" id="agregar_like_publis"
+                                                            class="agregar_like_publis card-link flex items-center">
+                                                            <svg class="w-8 h-8 text-blue-900 dark:text-white hover:text-blue-700"
+                                                                aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                                                fill="none" viewBox="0 0 20 20">
+                                                                <path stroke="currentColor" stroke-linecap="round"
+                                                                    stroke-linejoin="round" stroke-width="2"
+                                                                    d="M4.008 8.714c1-.097 1.96-.45 2.792-1.028a25.112 25.112 0 0 0 4.454-5.72 1.8 1.8 0 0 1 .654-.706 1.742 1.742 0 0 1 1.65-.098 1.82 1.82 0 0 1 .97 1.128c.075.248.097.51.065.767l-1.562 4.629M4.008 8.714H1v9.257c0 .273.106.535.294.728a.99.99 0 0 0 .709.301h1.002a.99.99 0 0 0 .71-.301c.187-.193.293-.455.293-.728V8.714Zm8.02-1.028h4.968c.322 0 .64.08.925.232.286.153.531.374.716.645a2.108 2.108 0 0 1 .242 1.883l-2.36 7.2c-.288.813-.48 1.354-1.884 1.354-2.59 0-5.39-1.06-7.504-1.66" />
+                                                            </svg>
+                                                            <span class="texto-ocultable ml-2 text-xs">Me gusta</span>
+                                                        </button>
+
+                                                        <div id="aviso" style="display: none;" class="m-2 mt-4">
+                                                            <h2 id="aviso"></h2>
+                                                        </div>
+                                                    </form>
+                                                </div>
+
+                                                <!-- BASURA BOTON -->
+                                                {% if user.id == cont.id_usuario %}
+                                                <div
+                                                    class="boton-separable m-0 p-2 d-flex align-items-center justify-content-center">
+                                                    <form action="{% url 'eliminar_publi'%}" method="post">
+                                                        {% csrf_token %}
+                                                        <input type="text" name="publicacion_id" id="publicacion_id"
+                                                            value="{{cont.id_publicacion}}" hidden>
+                                                        <button type="button"
+                                                            onclick="basura_publicacion('{{cont.id_publicacion}}')"
+                                                            class="card-link flex items-center">
+                                                            <svg class="w-8 h-8 text-blue-900 dark:text-white hover:text-blue-700"
+                                                                aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                                                fill="currentColor" viewBox="0 0 18 20">
+                                                                <path
+                                                                    d="M17 4h-4V2a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v2H1a1 1 0 0 0 0 2h1v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V6h1a1 1 0 1 0 0-2ZM7 2h4v2H7V2Zm1 14a1 1 0 1 1-2 0V8a1 1 0 0 1 2 0v8Zm4 0a1 1 0 0 1-2 0V8a1 1 0 0 1 2 0v8Z" />
+                                                            </svg>
+                                                            <span class="texto-ocultable ml-2 text-xs">Eliminar</span>
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                                {% endif %}
+                                                <!-- ARCHIVAR BOTON -->
+                                                {% if user.id == cont.id_usuario %}
+                                                <div
+                                                    class="boton-separable m-0 p-2 d-flex align-items-center justify-content-center">
+                                                    <form action="{% url 'ARCH_PUB_INI' %}" method="post">
+                                                        {% csrf_token %}
+                                                        <input type="text" name="publicacion_id" id="publicacion_id"
+                                                            value="{{cont.id_publicacion}}" hidden>
+                                                        <button type="button"
+                                                            onclick="archivar_publicacion('{{cont.id_publicacion}}')"
+                                                            class="flex items-center card-link ">
+                                                            <svg class="w-8 h-8 text-blue-900 dark:text-white hover:text-blue-700"
+                                                                aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                                                fill="currentColor" viewBox="0 0 18 15">
+                                                                <path
+                                                                    d="M1 13a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6H1v7Zm5.293-3.707a1 1 0 0 1 1.414 0L8 9.586V8a1 1 0 0 1 2 0v1.586l.293-.293a1 1 0 0 1 1.414 1.414l-2 2a1 1 0 0 1-1.416 0l-2-2a1 1 0 0 1 .002-1.414ZM17 0H1a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V1a1 1 0 0 0-1-1Z" />
+                                                            </svg>
+                                                            <span class="texto-ocultable ml-2 text-xs">Archivar</span>
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                                {% endif %}
+                                            </div>
+                                        </section>
+                                        <!-- SECCION DE COMENTARIO DE LA PUBLICACION -->
+                                        <div style="margin-top: 20px; margin-bottom: 20px;">
+                                            <form action="{% url 'AGRE_COME' %}" name="comentForm" class="comentForm"
+                                                method="post">
+                                                {% csrf_token %}
+                                                <div class="flex items-center">
+                                                    <input name="id_publi" class="id_publi"
+                                                        value="{{cont.id_publicacion}}" hidden>
+                                                    <input type="search" name="txtComentario"
+                                                        class="comentario txtComentario w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                                        placeholder="Comentar..." required maxlength="500">
+                                                    <input name="id_usuario" class="id_usuario" value="{{user.id}}"
+                                                        hidden>
+                                                    <input name="usuario" class="usuario" value="{{cont.usuario}}"
+                                                        hidden>
+                                                    <button type="submit"
+                                                        class="p-2.5 ml-2 text-sm font-medium text-white bg-gradient-to-br font-medium rounded-lg text-sm text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800">
+                                                        <svg class="w-6 h-6" fill="none" stroke="currentColor"
+                                                            viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                                stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                                        </svg>
+                                                    </button>
+                                                </div>
+                                                <span
+                                                    class="charCountPregunta text-xs text-gray-400 dark:text-gray-300">0
+                                                    /
+                                                    100</span>
+                                            </form>
+                                        </div>
+                                        <ul id="commentList-{{ cont.id_publicacion }}" name="commentList"
+                                        class="commentList">
+                                        <div id="lista-comentarios">
+                                            {% for c in comentarios %}
+                                            {% if c.0 == cont.id_publicacion %}
+                                            <div data-id="{{ c.4 }}"
+                                                class="comentario justify-center w-full p-2 bg-white border border-gray-200 rounded-lg  sm:p-4 md:p-4 dark:bg-gray-800 dark:border-gray-700">
+                                                <div
+                                                    class="flex items-center space-x-12 text-sm text-white-500 dark:text-gray-400">
+                                                    <!-- IMAGEN Y NOMBRE USUARIO COMENTARIO -->
+                                                    <a href="{% url 'PER_USU' c.1 %}">
+                                                        <div class="flex flex-col items-center justify-end pr-2 "
+                                                            style="width: 90px;">
+                                                            {% if c.5 == '0' %}
+                                                            <img class="rounded-full w-10 h-10"
+                                                                src="{% static 'img/user.jpg' %}"
+                                                                alt="Imagen Predeterminada">
+                                                            {% else %}
+                                                            <img class="rounded-full w-10 h-10"
+                                                                src="data:image/png;base64, {{c.5}}" alt="Imagen">
+                                                            {% endif %}
+                                                        </div>
+                                                    </a>
+                                                    <!-- RESPUESTA COMENTARIO -->
+                                                    <div class="flex items-center grid grid-cols-1">
+                                                        <div class="flex">
+                                                            <a href="{% url 'PER_USU' c.1 %}" class="flex items-center">
+                                                                <p class="flex center text-sm mr-2 sm:block hidden">
+                                                                    {{ c.3 }}
+                                                                </p>
+                                                            </a>
+                                                            <p class="flex center text-sm text-gray-400">
+                                                                @{{ c.6 }}
+                                                            </p>
+                                                        </div>
+                                                        <div class="flex items-center col-span-2">
+                                                            <div class="flex items-center" style="word-break: break-all;overflow-wrap:break-word;">
+                                                                <p class="flex center text-sm col-span-2">
+                                                                    {{ c.2 }}
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="ml-auto"> <!-- Mueve el boton a la derecha -->
+                                                        {% if c.1 == user.id %}
+                                                        <form action="{% url 'eliminar_comentario'%}" method="post">
+                                                            {% csrf_token %}
+                                                            <input type="text" name="publicacion_id"
+                                                                id="publicacion_id" value="{{cont.id_publicacion}}"
+                                                                hidden>
+                                                            <input type="text" name="comentario_id"
+                                                                id="comentario_id" value="{{c.4}}" hidden>
+                                                            <button type="button"
+                                                                onclick="basura_comentario('{{cont.id_publicacion}}', '{{c.4}}')"
+                                                                class="text-white m-2 bg-gradient-to-r from-red-400 to-red-600 font-medium rounded-lg px-2 py-1 text-center">
+                                                                <svg class="w-auto h-4"
+                                                                    xmlns="http://www.w3.org/2000/svg"
+                                                                    fill="currentColor" viewBox="0 0 18 20">
+                                                                    <path
+                                                                        d="M17 4h-4V2a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v2H1a1 1 0 0 0 0 2h1v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V6h1a1 1 0 1 0 0-2ZM7 2h4v2H7V2Zm1 14a1 1 0 1 1-2 0V8a1 1 0 0 1 2 0v8Zm4 0a1 1 0 0 1-2 0V8a1 1 0 0 1 2 0v8Z" />
+                                                                </svg>
+                                                            </button>
+                                                        </form>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                    </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                        <!-- ENCUESTAS -->
+                        {% if cont.tipo == "2" %}
+                        <div data-id="{{ cont.id_publicacion }}" class="encuesta mb-4 mt-2 sm:p-4 dark:bg-gray-900">
+                            <div class="flex justify-center">
+                                <div class="publiacion-card w-full h-auto max-w-xl border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700 scale-up-center"
+                                    style="color:rgb(0, 0, 0)">
+                                    <!-- SECCION DE USUARIO QUE SUBE PUBLICACION -->
+                                    <div
+                                        class="bg-white p-5 w-full max-w-xl pb-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700">
+                                        <div class="flex items-center justify-between pb-4">
+                                            <!-- IMAGEN Y NOMBRE USUARIO -->
+                                            <a href="{% url 'PER_USU' cont.id_usuario %}">
+                                                <div class="perfil-container flex items-center space-x-4"
+                                                    onmouseover="showTooltip()">
+                                                    {% if cont.foto_usuario != '0' %}
+                                                    <img class="rounded-full w-10 h-10"
+                                                        src="data:image/png;base64, {{ cont.foto_usuario }}"
+                                                        alt="Imagen">
+                                                    {% else %}
+                                                    <img class="rounded-full w-10 h-10"
+                                                        src="{% static 'img/user.jpg' %}" alt="Imagen Predeterminada">
+                                                    {% endif %}
+                                                    <!-- SECCION POPOVER DE PERFIL -->
+                                                    <div class="font-medium dark:text-white">
+                                                        <div class="font-semibold hover:underline">
+                                                            {{cont.nombre_usuario}}
+                                                        </div>
+                                                        <div class="text-gray-900">@{{cont.usuario}}</div>
+                                                        <div class="perfil-pequeno" onmouseover="clearHideTimeout()"
+                                                            onmouseout="startHideTimeout()">
+                                                            <div class="p-0 ">
+                                                                <div class="flex items-center mb-0">
+                                                                    {% if cont.foto_usuario != '0' %}
+                                                                    <img class="rounded-full w-10 h-10"
+                                                                        src="data:image/png;base64, {{ cont.foto_usuario }}"
+                                                                        alt="Imagen">
+                                                                    {% else %}
+                                                                    <img class="rounded-full w-10 h-10"
+                                                                        src="{% static 'img/user.jpg' %}"
+                                                                        alt="Imagen Predeterminada">
+                                                                    {% endif %}
+
+                                                                    <div class="ml-4 flex flex-col justify-between">
+                                                                        <p
+                                                                            class="text-base font-semibold leading-none text-gray-900 dark:text-white">
+                                                                            {{cont.nombre_usuario}}
+                                                                        </p>
+
+                                                                        <p class="text-base font-normal">
+                                                                            @{{cont.usuario}}
+                                                                        </p>
+                                                                    </div>
+                                                                </div>
+                                                                <hr
+                                                                    class="h-px my-4 bg-gray-200 border-0 dark:bg-gray-700">
+                                                                <div
+                                                                    class="flex justify-center items-center mt-4 space-x-3 md:mt-6">
+                                                                    <button type="button"
+                                                                        class="text-xs text-gray-900 bg-gradient-to-r from-red-200 via-red-300 to-yellow-200 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-red-100 dark:focus:ring-red-400 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">Ver
+                                                                        perfil</button>
+                                                                    <form method="post" action="{% url 'crear_chat' %}">
+                                                                        {% csrf_token %}
+                                                                        <input type="hidden" name="usuario_id"
+                                                                            value="{{ cont.id_usuario }}">
+                                                                        {% if user.id != cont.id_usuario %}
+                                                                        <button type="submit"
+                                                                            class="text-xs text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">Crear
+                                                                            Mensaje</button>
+                                                                        {% endif %}
+
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                            <div>
+                                                {% if user.id == cont.id_usuario %}
+                                                <a href="{% url 'EDI_ENC' cont.id_publicacion %}">
+                                                    <button type="button" class="ms-1 right-6 bottom-6 text-blue-900">
+                                                        <svg class="w-5 h-5 hover:text-blue-700" aria-hidden="true"
+                                                            xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                                                            viewBox="0 0 20 18">
+                                                            <path
+                                                                d="M12.687 14.408a3.01 3.01 0 0 1-1.533.821l-3.566.713a3 3 0 0 1-3.53-3.53l.713-3.566a3.01 3.01 0 0 1 .821-1.533L10.905 2H2.167A2.169 2.169 0 0 0 0 4.167v11.666A2.169 2.169 0 0 0 2.167 18h11.666A2.169 2.169 0 0 0 16 15.833V11.1l-3.313 3.308Zm5.53-9.065.546-.546a2.518 2.518 0 0 0 0-3.56 2.576 2.576 0 0 0-3.559 0l-.547.547 3.56 3.56Z" />
+                                                            <path
+                                                                d="M13.243 3.2 7.359 9.081a.5.5 0 0 0-.136.256L6.51 12.9a.5.5 0 0 0 .59.59l3.566-.713a.5.5 0 0 0 .255-.136L16.8 6.757 13.243 3.2Z" />
+                                                        </svg>
+                                                    </button>
+                                                </a>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <!-- TITULO Y FECHAS -->
+                                        <div class="flex items-center justify-between mb-4"
+                                            style="word-break: break-all;">
+                                            <h5 class="text-xl font-bold leading-none text-gray-900 dark:text-white">
+                                                {{cont.titulo}}</h5>
+                                        </div>
+                                        <section class="botones">
+                                            <div
+                                                class="flex justify-center w-full bg-white border border-gray-200 rounded-lg sm:p-4 p-4 dark:bg-gray-800 dark:border-gray-700">
+                                                <!-- FECHAS -->
+                                                <h5 class="card-text text-right" style="margin-right: 5px;">Desde:
+                                                    {{cont.fecha}} </h5>
+                                                <br>
+                                                <h5 class="card-text text-left" style="margin-right: 5px;">Hasta:
+                                                    {{cont.fecha_fin}}</h5>
+                                            </div>
+                                        </section>
+                                        <!-- DESCRIPCION -->
+                                        <div>
+                                            <p class="mb-3 font-normal text-white-700 dark:text-white-400 text-justify"
+                                                style="margin-top: 20px;word-wrap: break-word;">{{cont.descripcion}}
+                                            </p>
+                                        </div>
+                                        <!-- LINK -->
+                                        <div class="flex justify-start items-center pt-2 pb-2">
+                                            <label class="flex items-center">Enlace: </label>
+                                            <div class="pl-2 pb-2 text-blue-600"
+                                                style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;">
+                                                <a href="{{cont.link}}"
+                                                    class="mb-3 flex items-center font-normal text-white-700 dark:text-white-400 text-justify hover:underline"
+                                                    style="margin-top: 20px; display: block; width: 100%; overflow: hidden; text-overflow: ellipsis;"
+                                                    target="_blank">
+                                                    {{cont.link}}</a>
+                                            </div>
+                                            <button class="pl-2" data-popover-target="popover-description-4"
+                                                data-popover-placement="bottom-start" type="button"><svg
+                                                    class="w-4 h-4 ms-2 text-gray-400 hover:text-gray-500"
+                                                    aria-hidden="true" fill="currentColor" viewBox="0 0 20 20"
+                                                    xmlns="http://www.w3.org/2000/svg">
+                                                    <path fill-rule="evenodd"
+                                                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z"
+                                                        clip-rule="evenodd"></path>
+                                                </svg><span class="sr-only">Show information</span></button>
+                                            
+                                        </div>
+                                        <!-- PREGUNTA -->
+                                        <label class="pb-0 pt-2 flex items-center">{{cont.pregunta}}</label><br>
+
+                                        <hr class="h-px my-4 bg-gray-200 border-0 dark:bg-gray-700">
+                                        <form action="{% url 'AGRE_RESP_ENC' %}" name="encuForm" class="encuForm">
+                                            {% csrf_token %}
+                                            <!-- Sección para usuarios que aún no han respondido -->
+                                            <div class="flow-root">
+                                                <input type="text" class="txtUsuario" name="txtUsuario"
+                                                    value="{{user.id}}" hidden>
+                                                <input type="text" class="txtEncu" name="txtEncu"
+                                                    value="{{cont.id_publicacion}}" hidden>
+                                                <!-- Respuestas predeterminadas -->
+                                                <label>Respuestas predeterminadas</label>
+                                                <div class="flex justify-center items-center pb-4 pt-2">
+                                                    <button type="submit"
+                                                        class="btnRespuesta text-white justify-center flex items-center bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
+                                                        data-form-id="{{ cont.id_publicacion }}"
+                                                        data-respuesta="{{cont.respuesta_uno}}">{{cont.respuesta_uno}}</button>
+                                                    <button type="submit"
+                                                        class="btnRespuesta text-white justify-center flex items-center bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+                                                        data-form-id="{{ cont.id_publicacion }}"
+                                                        data-respuesta="{{cont.respuesta_dos}}">{{cont.respuesta_dos}}</button>
+                                                </div>
+                                                <!-- RESPUESTA LARGA -->
+                                                <div class="flex justify-start items-center">
+                                                    <label class="flex items-center">Respuesta personalizada
+                                                        <!-- BOTON DE POPOVER INFORMACION -->
+                                                        <button class="pl-2 inline-flex items-center align-middle"
+                                                            data-popover-target="popover-description-3"
+                                                            data-popover-placement="bottom-start" type="button">
+                                                            <svg class="w-4 h-4 text-gray-400 hover:text-gray-500"
+                                                                aria-hidden="true" fill="currentColor"
+                                                                viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                                                <path fill-rule="evenodd"
+                                                                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z"
+                                                                    clip-rule="evenodd"></path>
+                                                            </svg>
+                                                            <span class="sr-only">Show information</span>
+                                                        </button>
+                                                    </label>
+                                                </div>
+                                                <!-- DESPLIEGUE DE POPOVER INFORMACION -->
+                                                <div data-popover id="popover-description-3" role="tooltip"
+                                                    class="absolute z-10 invisible inline-block text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 w-72 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400">
+                                                    <div class="p-3 space-y-2">
+                                                        <h3 class="font-semibold text-gray-900 dark:text-white">
+                                                            Respuestas.</h3>
+                                                            <li>
+                                                                Recuerda que al enviar una respuesta, ya no se podra
+                                                            eliminar, por
+                                                            ende
+                                                            verifica
+                                                            bien lo que escribes.
+                                                            </li>
+                                                        <path stroke="currentColor" stroke-linecap="round"
+                                                            stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4" />
+                                                        </svg></a>
+                                                    </div>
+                                                    <div data-popper-arrow></div>
+                                                </div>
+                                                <div data-popover id="popover-description-4" role="tooltip"
+                                                class="absolute z-10 invisible inline-block text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 w-72 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400">
+                                                <div class="p-3 space-y-2">
+                                                    <h3 class="font-semibold text-gray-900 dark:text-white">¿Ya hay
+                                                        enlace?.
+                                                    </h3>
+                                                        <li>
+                                                            Si ya hay un enlace colocado para responder, no es necesario que
+                                                        envies
+                                                        una
+                                                        respuesta en el apartado inferior.
+                                                        </li>
+                                                    <path stroke="currentColor" stroke-linecap="round"
+                                                        stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4" />
+                                                    </svg></a>
+                                                </div>
+                                                <div data-popper-arrow></div>
+                                            </div>
+                                                <!-- TEXT AREA PARA ESCRIBIR RESPUESTA -->    
+                                                <div class=" justify-start items-center pt-2">
+                                                    <textarea name="txtRespuesta"
+                                                        class="respuesta txtRespuesta w-full text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                                        placeholder="Responder..." required maxlength="150"
+                                                        data-form-id="{{ cont.id_publicacion }}"></textarea>
+                                                </div>
+                                                
+                                            </div>
+                                            <span class="charCountRespuesta text-xs text-gray-400 dark:text-gray-300">0
+                                                /
+                                                150</span>
+
+                                            <div class="flex justify-center items-center  md:mt-4">
+                                                <button type="submit"
+                                                    class="text-white justify-center flex items-center bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">
+                                                    Enviar
+                                                </button>
+                                            </div>
+                                        </form>
+                                        <br>
+                                        {% if user.id == cont.id_usuario %}
+                                        <!-- SECCION BOTONES -->
+                                        <section class="botones">
+                                            <div
+                                                class="flex justify-center w-full bg-white border border-gray-200 rounded-lg sm:p-0 p-2 dark:bg-gray-800 dark:border-gray-700">
+                                                <div
+                                                    class="boton-separable m-0 p-2 d-flex align-items-center justify-content-center">
+                                                    <button type="button" name="accion" data-accion="grafico"
+                                                        data-id-encuesta="{{ cont.id_publicacion }}"
+                                                        data-event-id="{{ cont.id_publicacion }}"
+                                                        class="openPopupButton btn-grafico card-link flex items-center"
+                                                        data-event-id="{{  cont.id_publicacion  }}">
+                                                        <svg class="w-8 h-8 text-blue-900 dark:text-white hover:text-blue-700"
+                                                            aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                                            fill="none" viewBox="0 0 18 16">
+                                                            <path stroke="currentColor" stroke-linecap="round"
+                                                                stroke-linejoin="round" stroke-width="2"
+                                                                d="M1 1v14h16m0-9-3-2-3 5-3-2-3 4" />
+                                                        </svg>
+                                                        <span class="texto-ocultable ml-4 text-xs">Respuestas</span>
+                                                    </button>
+                                                </div>
+
+                                                <!-- BASURA -->
+                                                <div
+                                                    class="boton-separable m-0 p-2 d-flex align-items-center justify-content-center">
+                                                    <form action="{% url 'eliminar_encuesta'%}" method="post">
+                                                        {% csrf_token %}
+                                                        <input type="text" name="encuesta_id" id="encuesta_id"
+                                                            value="{{cont.id_publicacion}}" hidden>
+                                                        <button type="button"
+                                                            onclick="basura_encuesta('{{cont.id_publicacion}}')"
+                                                            class="card-link flex items-center">
+                                                            <svg class="w-8 h-8 text-blue-900 dark:text-white hover:text-blue-700"
+                                                                aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                                                fill="currentColor" viewBox="0 0 18 20">
+                                                                <path
+                                                                    d="M17 4h-4V2a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v2H1a1 1 0 0 0 0 2h1v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V6h1a1 1 0 1 0 0-2ZM7 2h4v2H7V2Zm1 14a1 1 0 1 1-2 0V8a1 1 0 0 1 2 0v8Zm4 0a1 1 0 0 1-2 0V8a1 1 0 0 1 2 0v8Z" />
+                                                            </svg>
+                                                            <span class="texto-ocultable ml-4 text-xs">Eliminar</span>
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                                <!-- ARCHIVAR -->
+                                                <div
+                                                    class="boton-separable m-0 p-2 d-flex align-items-center justify-content-center">
+                                                    <form action="{% url 'archivar_encuesta'%}" method="post">
+                                                        {% csrf_token %}
+                                                        <input type="text" name="encuesta_id" id="encuesta_id"
+                                                            value="{{cont.id_publicacion}}" hidden>
+                                                        <button type="button"
+                                                            onclick="archivar_encuesta('{{cont.id_publicacion}}')"
+                                                            class="flex items-center card-link">
+                                                            <svg class="w-8 h-8 text-blue-900 dark:text-white hover:text-blue-700"
+                                                                aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                                                fill="currentColor" viewBox="0 0 18 15">
+                                                                <path
+                                                                    d="M1 13a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6H1v7Zm5.293-3.707a1 1 0 0 1 1.414 0L8 9.586V8a1 1 0 0 1 2 0v1.586l.293-.293a1 1 0 0 1 1.414 1.414l-2 2a1 1 0 0 1-1.416 0l-2-2a1 1 0 0 1 .002-1.414ZM17 0H1a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V1a1 1 0 0 0-1-1Z" />
+                                                            </svg>
+
+                                                            <span class="texto-ocultable ml-4 text-xs">Archivar</span>
+                                                        </button>
+                                                    </form>
+                                                </div>
+
+                                            </div>
+                                        </section>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- ENCUESTAS POPUP -->
+                        <div id="popup-{{ cont.id_publicacion }}" style="max-height: 50rem;" class="popup rounded-lg" hidden>
+                            <div class="popup-content">
+                                <div style="position: absolute; z-index: 2; top: 10px; right: 10px;">
+                                    <button type="button" id="closeButton" data-event-id="{{ cont.id_publicacion }}"
+                                        class="closeButton text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-3 py-2 text-center mr-2 mb-2 dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900">Cerrar</button>
+                                </div>
+                                <!-- Participantes -->
+                                <div class="relative z-0 w-full mb-2 group">
+                                    <p class="text-m font-bold dark:text-white mt-4">Respuestas actuales</p>
+                                </div>
+                                <div style="background-color: rgb(208, 204, 216);max-width: 20rem;" class="rounded-lg p-2 m-2">
+                                    <canvas id="grafico-{{ cont.id_publicacion }}" style="max-width: 100%; height: auto;"></canvas>
+                                    <p id="data-{{ cont.id_publicacion }}"> </p>
+                                </div>
+                                <div class="contenedor text-gray-900 bg-gray-900 font-medium rounded-lg px-5 m-2" style="max-height: 17rem; overflow-y: auto;">
+
+                                    <ul id="encuList-{{ cont.id_publicacion }}" name="encuList" class="encuList"></ul>
+                                    {% for resp in respuestas %}
+                                    {% if cont.id_publicacion == resp.0 %}
+                                    <article data-id="{{ res.1 }}"
+                                        class="respuesta p-6 text-base bg-white rounded-lg dark:bg-gray-900 m-2"
+                                        style="background-color: rgb(48, 47, 47); color: white;">
+                                        <footer class="flex justify-between items-center mb-2">
+                                            <div class="flex items-center">
+                                                <p class="inline-flex items-center mr-3 text-sm font-semibold">
+                                                    {% if resp.6 == '0' %}
+                                                    <img class="mr-2 w-6 h-6 rounded-full"
+                                                        src="{% static '/img/user.jpg' %}">
+                                                    {{resp.3}} {{resp.4}} ~ {{resp.5}}
+                                                    {% else %}
+                                                    <img class="mr-2 w-6 h-6 rounded-full"
+                                                        src="data:image/png;base64, {{resp.6}}">{{resp.3}} {{resp.4}} ~
+                                                    {{resp.5}}
+                                                    {% endif %}
+                                                </p>
+                                            </div>
+                                        </footer>
+                                        <p class="">{{resp.2}}</p>
+                                        <div class="flex items-center mt-4 space-x-4">
+                                        </div>
+                                    </article>
+                                    {% endif %}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                        <!-- EVENTOS -->
+                        {% if cont.tipo == "3" %}
+                        <div data-id="{{ cont.id_publicacion }}" class="evento mb-4 mt-2 sm:p-4 dark:bg-gray-900">
+                            <div class="flex justify-center">
+                                <div class="publiacion-card w-full h-auto max-w-xl border-gray-200 shadow-md dark:bg-gray-800 dark:border-gray-700 scale-up-center"
+                                    style="color:rgb(0, 0, 0)">
+                                    <!-- SECCION DE USUARIO QUE SUBE EVENTO -->
+                                    <div
+                                        class="bg-white p-5 w-full max-w-xl pb-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700">
+                                        <div class="flex items-center justify-between pb-4">
+                                            <!-- IMAGEN Y NOMBRE USUARIO -->
+                                            <a href="{% url 'PER_USU' cont.id_usuario %}">
+                                                <div class="perfil-container flex items-center space-x-4"
+                                                    onmouseover="showTooltip()">
+                                                    {% if cont.foto_usuario != '0' %}
+                                                    <img class="rounded-full w-10 h-10"
+                                                        src="data:image/png;base64, {{ cont.foto_usuario }}"
+                                                        alt="Imagen">
+                                                    {% else %}
+                                                    <img class="rounded-full w-10 h-10"
+                                                        src="{% static 'img/user.jpg' %}" alt="Imagen Predeterminada">
+                                                    {% endif %}
+                                                    <!-- SECCION POPOVER DE PERFIL -->
+                                                    <div class="font-medium dark:text-white">
+                                                        <div class="font-semibold hover:underline">
+                                                            {{cont.nombre_usuario}}
+                                                        </div>
+                                                        <div class="text-gray-900">@{{cont.usuario}}</div>
+                                                        <div class="perfil-pequeno" onmouseover="clearHideTimeout()"
+                                                            onmouseout="startHideTimeout()">
+                                                            <div class="p-0 ">
+                                                                <div class="flex items-center mb-0">
+                                                                    {% if cont.foto_usuario != '0' %}
+                                                                    <img class="rounded-full w-10 h-10"
+                                                                        src="data:image/png;base64, {{ cont.foto_usuario }}"
+                                                                        alt="Imagen">
+                                                                    {% else %}
+                                                                    <img class="rounded-full w-10 h-10"
+                                                                        src="{% static 'img/user.jpg' %}"
+                                                                        alt="Imagen Predeterminada">
+                                                                    {% endif %}
+
+                                                                    <div class="ml-4 flex flex-col justify-between">
+                                                                        <p
+                                                                            class="text-base font-semibold leading-none text-gray-900 dark:text-white">
+                                                                            {{cont.nombre_usuario}}
+                                                                        </p>
+
+                                                                        <p class="text-base font-normal">
+                                                                            @{{cont.usuario}}
+                                                                        </p>
+                                                                    </div>
+                                                                </div>
+                                                                <hr
+                                                                    class="h-px my-4 bg-gray-200 border-0 dark:bg-gray-700">
+                                                                <div
+                                                                    class="flex justify-center items-center mt-4 space-x-3 md:mt-6">
+                                                                    <button type="button"
+                                                                        class="text-xs text-gray-900 bg-gradient-to-r from-red-200 via-red-300 to-yellow-200 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-red-100 dark:focus:ring-red-400 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">Ver
+                                                                        perfil</button>
+                                                                    <form method="post" action="{% url 'crear_chat' %}">
+                                                                        {% csrf_token %}
+                                                                        <input type="hidden" name="usuario_id"
+                                                                            value="{{ cont.id_usuario }}">
+                                                                        {% if user.id != cont.id_usuario %}
+                                                                        <button type="submit"
+                                                                            class="text-xs text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">Crear
+                                                                            Mensaje</button>
+                                                                        {% endif %}
+
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                            <!-- BOTON DE EDITAR -->
+                                            <div>
+                                                {% if user.id == cont.id_usuario %}
+                                                <a href="{% url 'EDI_EVE' cont.id_publicacion %}">
+                                                    <button type="button" class="ms-1 right-6 bottom-6 text-blue-900">
+                                                        <svg class="w-5 h-5 hover:text-blue-700" aria-hidden="true"
+                                                            xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                                                            viewBox="0 0 20 18">
+                                                            <path
+                                                                d="M12.687 14.408a3.01 3.01 0 0 1-1.533.821l-3.566.713a3 3 0 0 1-3.53-3.53l.713-3.566a3.01 3.01 0 0 1 .821-1.533L10.905 2H2.167A2.169 2.169 0 0 0 0 4.167v11.666A2.169 2.169 0 0 0 2.167 18h11.666A2.169 2.169 0 0 0 16 15.833V11.1l-3.313 3.308Zm5.53-9.065.546-.546a2.518 2.518 0 0 0 0-3.56 2.576 2.576 0 0 0-3.559 0l-.547.547 3.56 3.56Z" />
+                                                            <path
+                                                                d="M13.243 3.2 7.359 9.081a.5.5 0 0 0-.136.256L6.51 12.9a.5.5 0 0 0 .59.59l3.566-.713a.5.5 0 0 0 .255-.136L16.8 6.757 13.243 3.2Z" />
+                                                        </svg>
+                                                    </button>
+                                                </a>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <!-- TITULOS -->
+                                        <div>
+                                            <p class="card-text text-right"></p><br>
+                                        </div>
+                                        <div class="flex items-center justify-between mb-4"
+                                            style="word-break: break-all;">
+                                            <h5 class="text-xl font-bold leading-none text-gray-900 dark:text-white">
+                                                {{cont.titulo}}
+                                            </h5>
+                                        </div>
+                                        <!-- FECHA -->
+                                        <section class="botones">
+                                            <div
+                                                class="flex justify-center w-full bg-white border border-gray-200 rounded-lg sm:p-4 p-4 dark:bg-gray-800 dark:border-gray-700">
+                                                <h5 class="card-text text-right" style="margin-right: 5px;">Desde:
+                                                    {{cont.fecha}} </h5><br>
+                                                <h5 class="card-text text-left" style="margin-right: 5px;">Hasta:
+                                                    {{cont.fecha_fin}}</h5>
+                                            </div>
+                                        </section>
+                                        <!-- DESCRIPCION -->
+                                        <p class="descripcion mb-3 font-normal text-white-700 dark:text-white-400"
+                                            style="margin-top: 20px;word-wrap: break-word;">{{cont.descripcion}}
+                                        </p>
+                                        {% if user.id == cont.id_usuario %}
+                                        <!-- SECCION BOTONES -->
+                                        <section class="botones">
+                                            <div
+                                                class="flex justify-center w-full bg-white border border-gray-200 rounded-lg sm:p-0 p-2 dark:bg-gray-800 dark:border-gray-700">
+                                                <!-- BASURA BOTON -->
+                                                <div
+                                                    class="boton-separable m-0 p-2 d-flex align-items-center justify-content-center">
+                                                    <form action="{% url 'eliminar_evento' %}" method="post">
+                                                        {% csrf_token %}
+                                                        <input type="text" name="evento_id" id="evento_id"
+                                                            value="{{ cont.id_publicacion }}" hidden>
+                                                        <button type="button"
+                                                            onclick="basura_evento('{{ cont.id_publicacion }}')"
+                                                            class="card-link flex items-center">
+                                                            <svg class="w-8 h-8 text-blue-900 dark:text-white hover:text-blue-700"
+                                                                aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                                                fill="currentColor" viewBox="0 0 18 20">
+                                                                <path
+                                                                    d="M17 4h-4V2a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v2H1a1 1 0 0 0 0 2h1v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V6h1a1 1 0 1 0 0-2ZM7 2h4v2H7V2Zm1 14a1 1 0 1 1-2 0V8a1 1 0 0 1 2 0v8Zm4 0a1 1 0 0 1-2 0V8a1 1 0 0 1 2 0v8Z" />
+                                                            </svg>
+                                                            <span class="texto-ocultable ml-2 text-xs">Eliminar</span>
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                                <!-- ARCHIVAR BOTON -->
+                                                <div
+                                                    class="boton-separable m-0 p-2 d-flex align-items-center justify-content-center">
+                                                    <form action="{% url 'ARCH_EVE_INI' %}" method="post">
+                                                        {% csrf_token %}
+                                                        <input type="text" name="evento_id" id="evento_id"
+                                                            value="{{ cont.id_publicacion }}" hidden>
+                                                        <button type="button"
+                                                            onclick="archivar_evento('{{ cont.id_publicacion }}')"
+                                                            class="flex items-center card-link">
+                                                            <svg class="w-8 h-8 text-blue-900 dark:text-white hover:text-blue-700"
+                                                                aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                                                fill="currentColor" viewBox="0 0 18 15">
+                                                                <path
+                                                                    d="M1 13a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6H1v7Zm5.293-3.707a1 1 0 0 1 1.414 0L8 9.586V8a1 1 0 0 1 2 0v1.586l.293-.293a1 1 0 0 1 1.414 1.414l-2 2a1 1 0 0 1-1.416 0l-2-2a1 1 0 0 1 .002-1.414ZM17 0H1a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V1a1 1 0 0 0-1-1Z" />
+                                                            </svg>
+                                                            <span class="texto-ocultable ml-2 text-xs">Archivar</span>
+                                                        </button>
+                                                    </form>
+                                                </div>
+
+                                            </div>
+                                        </section>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <div class="pagination flex justify-center items-center">
+                <nav class="p-5 m-2 flex items-center justify-between pt-4" aria-label="Table navigation">
+                    <ul class="inline-flex -space-x-px text-sm h-8">
+                        {% if contenido.has_previous %}
+                        <li>
+                            <a href="?page=1{% if search_query %}&q={{ search_query }}{% endif %}"
+                                class="p-5 flex items-center justify-center px-3 h-8 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">&laquo;
+                                Inicio</a>
+                        </li>
+                        <li>
+                            <a href="?page={{ contenido.previous_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}"
+                                class="p-5 flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Anterior</a>
+                        </li>
+                        {% endif %}
+                        <li>
+                            <span
+                                class="p-5 current-page flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">{{contenido.number}}</span>
+                        </li>
+                        {% if contenido.has_next %}
+                        <li>
+                            <a href="?page={{ contenido.next_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}"
+                                class="p-5 flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Siguiente</a>
+                        </li>
+                        <li>
+                            <a href="?page={{ contenido.paginator.num_pages }}{% if search_query %}&q={{ search_query }}{% endif %}"
+                                class="p-5 flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">Final
+                                &raquo;</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </div>
+
+
+        </div>
+    </div>
+    </div>
+    </div>
+</section>
+<script>
+    $(document).ready(function () {
+        $('.btn-grafico').click(function () {
+            var idEncuesta = $(this).data('id-encuesta');
+            var canvasId = "grafico-" + idEncuesta;
+
+            // Verificar si ya hay un gráfico en el canvas y destruirlo
+            var existingChart = Chart.getChart(canvasId);
+            if (existingChart) {
+                existingChart.destroy();
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: '/grafico_respuestas',
+                data: {
+                    id_encuesta: idEncuesta,
+                    accion: 'grafico',
+                    csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+                },
+                success: function (data) {
+                    console.log(data);
+                    if (data.length > 0) {
+                        var encuestaData = data[0];
+
+                        // Update HTML elements with the received data
+                        $('#data-' + idEncuesta).html(
+                            `<p>Respuestas Uno: ${encuestaData.resuesta_uno}</p>
+                    <p>Respuestas Dos: ${encuestaData.resuesta_dos}</p>
+                    <p>Otras Respuestas: ${encuestaData.respuestas_otras}</p> `);
+
+                        const xValues = ["Respuesta 1", "Respuesta 2", "Otras"];
+                        const yValues = [encuestaData.resuesta_uno, encuestaData.resuesta_dos, encuestaData.respuestas_otras];
+                        const totalRespuestas = yValues.reduce((acc, val) => acc + val, 0);
+
+                        // Calcula los porcentajes
+                        const porcentajes = yValues.map((valor) => ((valor / totalRespuestas) * 100).toFixed(2) + "%");
+
+                        const barColors = ["red", "green", "blue"];
+                        new Chart(canvasId, {
+                            type: "pie",
+                            data: {
+                                labels: xValues.map((label, index) => label + " (" + porcentajes[index] + ")"),
+                                datasets: [{
+                                    backgroundColor: barColors,
+                                    data: yValues,
+                                }]
+                            },
+                            options: {
+                                tooltips: {
+                                    callbacks: {
+                                        label: function (tooltipItem, data) {
+                                            const dataset = data.datasets[tooltipItem.datasetIndex];
+                                            const currentValue = dataset.data[tooltipItem.index];
+                                            const porcentaje = porcentajes[tooltipItem.index];
+                                            return xValues[tooltipItem.index] + ": " + porcentaje;
+                                        }
+                                    }
+                                }
+                            }
+                        });
+
+                    } else {
+                        console.log("No data received.");
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error(xhr.responseText);
+                }
+            });
+        });
+    });
+</script>
+
+<script type="text/javascript" src="{% static 'js/contador_comentario.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/contador_respuesta.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/home.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/ajax_home.js' %}"></script>
+
+
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script src="{% static '/js/popup.js' %}"></script>
+<link rel="stylesheet" href="{% static '/css/popup.css' %}">
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+{% endblock contenido %}

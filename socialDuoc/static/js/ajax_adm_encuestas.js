@@ -1,0 +1,131 @@
+$(document).on('submit', '.archivarForm', function (event) {
+    event.preventDefault();
+
+    var form = $(this); // Obtén el formulario actual
+    var button = form.find('[type="submit"].active');// Encuentra el botón dentro del formulario
+    var estado = form.closest('tr').find('.estado');
+    var icono = form.closest('tr').find('.icono');
+    var color = form.closest('tr').find('.color');
+    var accion = button.data('accion');
+    
+    Swal.fire({
+        title: 'Confirmación',
+        text: '¿Estás seguro de que deseas realizar esta acción?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, continuar',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                type: 'POST',
+                url: '/archivar_encuesta',
+                data: {
+                    id_encuesta: form.find('.id_encuesta').val(),
+                    csrfmiddlewaretoken: form.find('input[name=csrfmiddlewaretoken]').val(),
+                    accion: accion
+                },
+                success: function (data) {
+                    if (data === 'MODIFICADO') {
+                        if (button.text() === 'Archivar') {
+                            button.removeClass('text-red-700 hover:text-white border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300');
+                            button.addClass('text-purple-700 hover:text-white border border-purple-700 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300');
+                            button.text('Activar');
+                            estado.text('Archivada');
+                            icono.attr('d', 'M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 11.793a1 1 0 1 1-1.414 1.414L10 11.414l-2.293 2.293a1 1 0 0 1-1.414-1.414L8.586 10 6.293 7.707a1 1 0 0 1 1.414-1.414L10 8.586l2.293-2.293a1 1 0 0 1 1.414 1.414L11.414 10l2.293 2.293Z');
+                            color.removeClass('text-green-500 bg-green-100').addClass('text-red-500 bg-red-100');
+                        } else {
+                            button.removeClass('text-purple-700 hover:text-white border border-purple-700 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300');
+                            button.addClass('text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300');
+                            button.text('Archivar');
+                            estado.text('Activa');
+                            icono.attr('d', 'M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z');
+                            color.removeClass('text-red-500 bg-red-100').addClass('text-green-500 bg-green-100');
+                        }
+                    } else if (data === 'ELIMINADO') {
+                        form.closest('tr').hide(); // Esto ocultará el tr actual
+                    }
+                }
+            });
+        }
+    });
+});
+
+// Agrega un controlador de clic a los botones para almacenar la acción
+$('.modificar, .eliminar').click(function () {
+    $(this).closest('form').find('button[type="submit"]').removeClass('active');
+    $(this).addClass('active');
+});
+
+
+$(document).ready(function () {
+    $('.btn-grafico').click(function () {
+        var idEncuesta = $(this).data('id-encuesta');
+        var canvasId = "grafico-" + idEncuesta;
+
+        // Verificar si ya hay un gráfico en el canvas y destruirlo
+        var existingChart = Chart.getChart(canvasId);
+        if (existingChart) {
+            existingChart.destroy();
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '/grafico_respuestas',
+            data: {
+                id_encuesta: idEncuesta,
+                accion: 'grafico',
+                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+            },
+            success: function (data) {
+                console.log(data);
+                if (data.length > 0) {
+                    var encuestaData = data[0];
+
+                    // Update HTML elements with the received data
+                    $('#data-' + idEncuesta).html(
+                        `<p>Respuestas Uno: ${encuestaData.resuesta_uno}</p>
+                    <p>Respuestas Dos: ${encuestaData.resuesta_dos}</p>
+                    <p>Otras Respuestas: ${encuestaData.respuestas_otras}</p> `);
+
+                    const xValues = ["Respuesta 1", "Respuesta 2", "Otras"];
+                    const yValues = [encuestaData.resuesta_uno, encuestaData.resuesta_dos, encuestaData.respuestas_otras];
+                    const totalRespuestas = yValues.reduce((acc, val) => acc + val, 0);
+
+                    // Calcula los porcentajes
+                    const porcentajes = yValues.map((valor) => ((valor / totalRespuestas) * 100).toFixed(2) + "%");
+
+                    const barColors = ["red", "green", "blue"];
+                    new Chart(canvasId, {
+                        type: "pie",
+                        data: {
+                            labels: xValues.map((label, index) => label + " (" + porcentajes[index] + ")"),
+                            datasets: [{
+                                backgroundColor: barColors,
+                                data: yValues,
+                            }]
+                        },
+                        options: {
+                            tooltips: {
+                                callbacks: {
+                                    label: function (tooltipItem, data) {
+                                        const dataset = data.datasets[tooltipItem.datasetIndex];
+                                        const currentValue = dataset.data[tooltipItem.index];
+                                        const porcentaje = porcentajes[tooltipItem.index];
+                                        return xValues[tooltipItem.index] + ": " + porcentaje;
+                                    }
+                                }
+                            }
+                        }
+                    });
+
+                } else {
+                    console.log("No data received.");
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error(xhr.responseText);
+            }
+        });
+    });
+});

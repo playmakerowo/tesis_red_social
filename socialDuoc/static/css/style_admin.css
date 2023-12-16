@@ -1,0 +1,64 @@
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-image: url(../img/duoc_slider.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+
+}
+
+body::-webkit-scrollbar {
+    width: 15px;
+}
+
+body::-webkit-scrollbar-thumb {
+    background: rgb(181, 184, 6);
+}
+
+body::-webkit-scrollbar-thumb:hover {
+    background: rgb(209, 212, 8);
+}
+
+#menu_lateral {
+    background-color: black;
+    color: white;
+}
+
+#carta {
+    background-color: white;
+    color: rgb(0, 0, 0);
+}
+
+#tabla {
+    background-color: white;
+    color: rgb(2, 2, 2);
+}
+
+#tabla_objeto {
+    background-color: rgba(253, 253, 253, 0.986);
+    color: rgb(0, 0, 0);
+}
+
+span {
+    color: white;
+}
+
+/* Estilos CSS para la paginación */
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+th {
+    max-width: 7rem;
+   }
+
+@media only screen and (max-width: 800px) {
+    .grafico-card {
+        /* Estilos específicos para teléfonos */
+        max-width: 20rem;
+        width: 20rem;
+        padding: 5px;
+    }
+}

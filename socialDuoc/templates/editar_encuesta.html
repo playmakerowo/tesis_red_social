@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block css %}
+<!-- JS CREAR EVENTO -->
+<LINK REL=StyleSheet HREF="{% static '/js/crearEvento.js" TYPE="text/js' %}" MEDIA=screen>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/datepicker.min.js"></script>    
+<!-- FLOWBITE FECHA -->
+{% endblock css %}
+
+{% block contenido %}
+<!-- SECCION DE CREAR ENCUESTA -->
+<section class="p-2 flex justify-center items-center min-h-screen dark:bg-gray-900 my-8 scale-up-center">
+    <div
+        class="w-full max-w-xl p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700">
+        <!-- CREAR ENCUESTA -->
+        <div class="py-8 p-4 px-4 mx-auto max-w-2xl">
+            <p class="m-3 p-0 flex justify-center items-center text-4xl font-bold text-gray-900 dark:text-white">
+                Editar Encuesta</p>
+        </div>
+        <p class="m-6 p-0 mb-4 flex justify-center items-center text-1xl text-gray-900 dark:text-white">
+            Aqui puedes editar los campos de tu encuesta.</p>
+        {% for en in encuestas %}
+        <form class="formulario" action="{% url 'EDI_ENC' en.7 %}" method="post">
+            {% csrf_token %}
+            {% if en.5 == user.id %}
+                <!-- TITULO DE ENCUESTA -->
+                <div class="sm:col-span-2">
+                    <label for="txtTitulo" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nombre
+                        del Evento</label>
+                    <input type="text" name="txtTitulo" id="txtTitulo"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                        placeholder="Ingrese nombre evento" value="{{en.0}}" maxlength="100">
+                        <span id="charCountTitulo" class="text-xs text-gray-400 dark:text-gray-300">0 / 100</span>
+                </div>
+                <div class="sm:col-span-2">
+                    <label for="txtPregunta"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Pregunta</label>
+                    <input id="txtPregunta" rows="8" name="txtPregunta"
+                        class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                        placeholder="Ingrese la descripcion de la encuesta " value="{{en.1}}" maxlength="100">
+                        <span id="charCountPregunta" class="text-xs text-gray-400 dark:text-gray-300">0 / 100</span>
+                </div>
+                <!-- Descripcion del evento  -->
+                <div class="sm:col-span-2">
+                    <label for="txtDesc"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Descripcion(Opcional)</label>
+                    <input id="txtDesc" rows="8" name="txtDesc"
+                        class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                        placeholder="Ingrese la descripcion del evento " value="{{en.2}}" maxlength="1500">
+                        <span id="charCountDesc" class="text-xs text-gray-400 dark:text-gray-300">0 / 1500</span>
+                </div>
+                <!-- LINK" -->
+                <div class="sm:col-span-2">
+                    <label for="txtlink"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Link (Opcional)</label>
+                    <input id="txtlink" rows="8" name="txtlink"
+                        class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                        placeholder="Ingrese la descripcion del evento " value="{{en.8}}" maxlength="150">
+                        <span id="charCountLink" class="text-xs text-gray-400 dark:text-gray-300">0 / 150</span>
+                </div>
+                <!-- Campo de entrada "Respuestas predeterminadas" -->
+                <div class="grid gap-6 mb-6 md:grid-cols-2">
+                    <div>
+                        <label for="respuesta_uno" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Respuesta uno</label>
+                        <input type="text" id="respuesta_uno" name="respuesta_uno"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            placeholder="Respuesta" value="{{en.9}}" required>
+                    </div>
+                    <div>
+                        <label for="respuesta_dos" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Respuesta dos</label>
+                        <input type="text" id="respuesta_dos" name="respuesta_dos"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            placeholder="Respuesta dos" value="{{en.10}}" required>
+                    </div>
+                </div>
+                
+                <div class="sm:col-span-2">
+                    <label for="price" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Fecha
+                        del
+                        evento</label>
+                    <div date-rangepicker class="flex items-center">
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                                    xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                    <path
+                                        d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
+                                </svg>
+                            </div>
+                            <input name="fechaI" type="text"  value="{{en.3}}"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                placeholder="Inicio">
+                        </div>
+                        <span class="mx-4 text-gray-500">Hasta</span>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                                    xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                    <path
+                                        d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
+                                </svg>
+                            </div>
+                            <input  name="fechaF" type="text"  value="{{en.4}}"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                placeholder="Fin">
+                        </div>
+                    </div>
+                <div class="flex justify-center items-center mt-4 space-x-3 md:mt-6">
+                        <button type="button" onclick="editar('{{en.7}}')"
+                            class="text-white justify-cente flex items-center bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">
+                            Aceptar
+                        </button>
+                    <a href="{% url 'HOME' %}">
+                        <button type="button"
+                            class="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">Cancelar</button>
+                    </a>
+                </div>
+                {{mensaje_error}}
+            {% endif %}
+        </form>
+        {% endfor %}
+
+        {% if messages %}
+        <ul class="messages pt-4">
+            {% for message in messages %}
+            <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+            <input type="text" id="mensaje" value="{{ message }}" hidden disabled>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
+    <!-- BOTON -->
+
+    </div>
+    </div>
+    <script type="text/javascript" src="{% static 'js/editar_encuesta.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/contador_encuesta.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/alerta_confirmar_crear_editar.js' %}"></script>
+</section>
+
+{% endblock contenido %}

@@ -1,0 +1,216 @@
+{% extends "base_admin.html" %}
+{% load static %}
+
+{% block titulo_admin %}
+
+<title>Admin Publicaciones</title>
+
+{% endblock titulo_admin %}
+
+
+{% block css_admin %}
+
+
+{% endblock css_admin %}
+
+{% block contenido_admin %}
+
+st
+
+<!--Inicio espacio-->
+<div class="p-4 sm:ml-64">
+    <div class="p-4 border-gray-200 border-dashed rounded-lg dark:border-gray-700">
+        <!--Inicio Titulo-->
+        <div class="grid grid-cols-1 gap-4 mb-4">
+            <div id="carta" class="flex items-center justify-center h-24 rounded bg-gray-50 dark:bg-gray-800">
+                <p class="text-2xl">
+                    Administrar Publicaciones
+                </p>
+            </div>
+        </div>
+        <!--Fin Titulo-->
+        <!--Inicio espacio tabla-->
+        <div class="justify-center rounded">
+            <div id="tabla3" class="overflow-x-auto shadow-md sm:rounded-lg bg-white p-2">
+                <!--Inicio tabla-->
+                <!-- INICIO DATA TABLE -->
+                <table id="myTablepubli" class="display w-full text-sm text-left">
+                    <!--Inicio Titulos tabla-->
+                    <thead class="text-xs">
+                        <tr>
+                            <th scope="col" class=" foto px-6 py-3">
+                                Foto
+                            </th>
+                            <th scope="col" class=" publicador px-6 py-3">
+                                Publicador
+                            </th>
+                            <th scope="col" class=" fecha px-6 py-3">
+                                Fecha
+                            </th>
+                            <th scope="col" class=" estado px-6 py-3">
+                                Estado
+                            </th>
+                            <th scope="col" class=" comentarios px-6 py-3">
+                                Comentarios
+                            </th>
+                            <th scope="col" class=" accion px-6 py-3">
+                                Acción
+                            </th>
+                        </tr>
+                    </thead>
+                    <!--Fin Titulos tabla-->
+                    <!--Inicio contenido tabla-->
+
+                    <tbody>
+                        {% for publi in publicaciones %}
+                        <!--Inicio objeto tabla-->
+                        <tr id="tabla_objetopubli" class="bg-white border-b encuesta-row">
+                            <!-- Foto -->
+                            <th class="w-32 p-4">
+                                {% if publi.7 == '0' %}
+                                <img src="{% static '/img/gato.png' %}">
+                                {% else %}
+                                <img src="data:image/png;base64, {{publi.7}}" class="w-12 h-12" alt="Medium avatar">
+                                {% endif %}
+                                <span class="sr-only">Imagen Publicacion</span>
+                            </th>
+                            <!--Publicador-->
+                            <th class="px-6 py-4 font-medium whitespace-nowrap dark:text-white">
+                                <p class="text-sm font-medium truncate dark:text-white" id="nombre">
+                                    {{publi.4}} {{publi.5}} {{publi.9}}
+                                </p>
+                                <p class="text-sm  truncate dark:text-gray-400">
+                                    {{publi.6}}
+                                </p>
+                            </th>
+                            <!--FECHA-->
+                            <th class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                <div class="">
+                                    <p class="text-sm font-medium text-gray-900 truncate dark:text-white">
+                                        {{publi.1}}
+                                </div>
+                            </th>
+                            <!--Estado-->
+                            <td>
+                                {% if publi.3 == 1 %}
+                                <div id="toast-success" class="flex items-center w-full max-w-xs" style="width: 90px;">
+                                    <div
+                                        class="color inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-green-500 bg-green-100 rounded-lg">
+                                        <svg id="icono" class="icono w-5 h-5" aria-hidden="true"
+                                            xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                            <path id="icono" class="icono"
+                                                d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z" />
+                                        </svg>
+                                        <span class="sr-only">Check icon</span>
+                                    </div>
+                                    <div id="estado" class="estado ml-3 text-sm font-normal">Activa</div>
+                                </div>
+                                {% else %}
+                                <div id="toast-success" class="flex items-center w-full max-w-xs" style="width: 90px;">
+                                    <div
+                                        class="color inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-red-500 bg-red-100 rounded-lg dark:bg-red-800 dark:text-red-200">
+                                        <svg class=" w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                            fill="currentColor" viewBox="0 0 20 20">
+                                            <path id="icono" class="icono"
+                                                d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 11.793a1 1 0 1 1-1.414 1.414L10 11.414l-2.293 2.293a1 1 0 0 1-1.414-1.414L8.586 10 6.293 7.707a1 1 0 0 1 1.414-1.414L10 8.586l2.293-2.293a1 1 0 0 1 1.414 1.414L11.414 10l2.293 2.293Z" />
+                                        </svg>
+                                        <span class="sr-only">Error icon</span>
+                                    </div>
+                                    <div id="estadodos" class="estado ml-3 text-sm font-normal">Archivada</div>
+                                </div>
+                                {% endif %}
+                            </td>
+                            <!--Comentarios-->
+                            <td>
+                                <button type="button" data-event-id="{{ publi.0 }}"
+                                    class="openPopupButton m-2 text-green-700 hover:text-white border border-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:border-green-500 dark:text-green-500 dark:hover:text-white dark:hover:bg-green-600 dark:focus:ring-green-800">Comentarios</button>
+                            </td>
+                            <!--Acciones ELIMINAR ARCHIVAR MODIFICAR-->
+                            <td>
+
+                                <form action="{% url 'archivar_publicacion' %}" id="archivarForm" class="archivarForm">
+                                    {% csrf_token %}
+                                    <input type="text" class="id_usuario" id="id_usuario" name="id_usuario"
+                                        value="{{ publi.0 }}" style="display: none;">
+
+                                    {% if publi.3 == 1 %}
+                                    <button type="submit" name="accion" data-accion="modificar" style="width: 90px;"
+                                        class="Button sweet-alert-button modificar m-2 text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900">Archivar</button>
+                                    {% else %}
+                                    <button type="submit" name="accion" data-accion="modificar" style="width: 90px;"
+                                        class="Button modificar m-2 text-purple-700 hover:text-white border border-purple-700 hover:bg-purple-800 focus:ring-4 focus:outline-none focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:border-purple-500 dark:text-purple-500 dark:hover:text-white dark:hover:bg-purple-600 dark:focus:ring-purple-900 m-2">Activar</button>
+                                    {% endif %}
+
+                                    <button type="submit" name="accion" data-accion="eliminar" style="width: 90px;"
+                                        class="Button2 eliminar m-2 text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900">Eliminar</button>
+                                    <a href="{% url 'adm_modificar_publicacion' publi.0 %}">
+                                        <button type="button" style="width: 90px;"
+                                            class="m-2 text-green-700 hover:text-white border border-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:border-green-500 dark:text-green-500 dark:hover:text-white dark:hover:bg-green-600 dark:focus:ring-green-800">Modificar</button>
+                                    </a>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor publi in publicaciones %}
+                        <!--Fin  objeto tabla-->
+                    </tbody>
+                </table>
+                <!--Fin numero de paginas-->
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+</script>
+<!--  POPUP PUBLICACIONES COMENTARIOS-->
+{% for publi in publicaciones %}
+<div id="popup-{{ publi.0 }}" class="popup rounded-lg" hidden>
+    <div class="popup-content">
+        <div style="position: absolute; z-index: 2; top: 10px; right: 10px;">
+            <button type="button" id="closeButton" data-event-id="{{ publi.0 }}"
+                class="closeButton text-red-700 hover:text-white border border-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-3 py-2 text-center mr-2 mb-2 dark:border-red-500 dark:text-red-500 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-900">Cerrar</button>
+        </div>
+        <!--Comentarios-->
+        <div class="relative z-0 w-full mb-2 group">
+            <p class="text-m font-bold dark:text-white mt-4">Comentarios actuales</p>
+        </div>
+        <div class="contenedor text-gray-900 bg-gray-900 font-medium rounded-lg px-5 m-2">
+            {% for com in comentarios %}
+            {% if com.0 == publi.0 %}
+            <article class="p-6 text-base bg-white rounded-lg dark:bg-gray-900 m-2"
+                style="background-color: rgb(48, 47, 47); color: white;">
+                <footer class="flex justify-between items-center mb-2">
+                    <div class="flex items-center">
+                        <p class="inline-flex items-center mr-3 text-sm font-semibold">
+
+                            {% if com.6 == '0' %}
+                            <img class="mr-2 w-6 h-6 rounded-full" src="{% static '/img/user.jpg' %}"> {{com.3}}
+                            {{com.4}} ~ {{com.5}}
+                            {% else %}
+                            <img class="mr-2 w-6 h-6 rounded-full" src="data:image/png;base64, {{com.6}}">{{com.3}}
+                            {{com.4}} ~
+                            {{com.5}}
+                            {% endif %}
+                        </p>
+                    </div>
+                </footer>
+                <p class="">{{com.2}}</p>
+                <div class="flex items-center mt-4 space-x-4">
+                </div>
+            </article>
+            {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endfor %}
+<!--  FIN POPUP PUBLICACIONES COMENTARIOS-->
+{% endblock contenido_admin %}
+{% block js_admin %}
+
+<script src="{% static 'js/ajax_adm_publis.js' %}"></script>
+<script src="{% static '/js/tablas_admin.js' %}"></script>
+<script src="{% static '/js/popup.js' %}"></script>
+<link rel="stylesheet" href="{% static '/css/popup.css' %}">
+{% endblock js_admin %}

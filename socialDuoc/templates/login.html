@@ -1,0 +1,120 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- NOMBRE PAGINA -->
+    <title>Inicio</title>
+    <link rel="icon" type="image/png" href="../static/img/favicon.png"/>
+    <!-- FLOWBITE -->
+    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/flowbite@1.5.3/dist/flowbite.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/flowbite@1.5.3/dist/flowbite.min.css" />
+    <!-- FUENTE -->
+    <link rel="preconnect" href="https://fonts.googleapis.com'">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+    <!-- ESTILO CSS-->
+    <link rel="stylesheet" href="{% static '/css/style-general.css' %}">
+    <!-- CAPTACHA-->
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+</head>
+
+<body>
+    {% block contenido_login %}
+    <!-- BODY Cuerpo de pagina -->
+    <div>
+        <!-- Tarjeta Inicio de Sesion -->
+        <div class="flex justify-center items-center min-h-screen scale-up-center">
+            <div
+                class="w-full max-w-sm p-4 bg-black  rounded-lg shadow sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700">
+                <form action="{% url 'LOGIN' %}" method="post" class="space-y-8">
+                    {% csrf_token %}
+                    <div class="d-flex align-items-center">
+                        <img src="{% static '/img/logo_socialduoc_white.png' %}" alt="Logo" class="h-6 sm:h-15">
+                    </div>
+                    <h5 class="text-xl font-medium text-gray-900" style="color: white; text-align: center;">Iniciar Sesión</h5>
+                    <div>
+                        <label for="{{ form.email.id_for_label }}"
+                               class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                               style="color: white;">Usuario</label>
+                        <input type="text" name="txtCorreo" id="txtCorreo"
+                               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                               placeholder="Ingresar Usuario" required>
+                    </div>
+                    <div>
+                        <label for="{{ form.contrasenia.id_for_label }}"
+                               class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                               style="color: white;">Contraseña</label>
+                        <input type="password" name="txtContra" id="txtContra"
+                               placeholder="••••••••"
+                               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white"
+                               required>
+                    </div>
+                    <div>
+                        <button type="submit" onclick="validarUsuario()"
+                        class="mt-4 w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Iniciar Sesión
+                </button>
+                    </div>
+
+                </form>
+                <div class="pt-4">
+                    <H3 style="color: white;">
+                        {% if mensaje %}
+                        <p class="error-message">{{ mensaje }}</p>
+                    {% endif %}
+                    </H3>
+                    {% if messages %}
+                    <ul class="messages" style="color: white;">
+                        {% for message in messages %}
+                        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+                        
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </div>
+                <div class="flex justify-center items-center pt-6">
+                    <a href="{% url 'OLV' %}"
+                       class=" text-sm text-blue-700 hover:underline dark:text-blue-500"
+                       style="color:#F1C40F;">¿Olvidaste tu contraseña?</a>
+                </div>
+                
+                <p class="pt-8 flex items-center text-sm font-semibold text-gray-200">Notas: Antes de ingresar... <button data-popover-target="popover-description" data-popover-placement="bottom-end" type="button"><svg class="w-4 h-4 ms-2 text-gray-400 hover:text-gray-500" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"></path></svg><span class="sr-only">Show information</span></button></p>
+                <div data-popover id="popover-description" role="tooltip" class="absolute z-10 invisible inline-block text-sm text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm opacity-0 w-72 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400">
+                    <div class="p-3 space-y-2">
+                        <h3 class="font-semibold text-gray-900 dark:text-white">Primera vez.</h3>
+                        <p>Si es primera vez que inicias sesion debes cambiar tu contraseña antes de ingresar, en el apartado ¿Olvidaste tu contreseña?</p>
+                        <h3 class="font-semibold text-gray-900 dark:text-white">Intentos.</h3>
+                        <p>Al cuarto intento fallido luego de ingresar tus datos, deberas esperar 60 segundos para volver a ingresar.</p>
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
+                    </svg></a>
+                    </div>
+                    <div data-popper-arrow></div>
+                </div>
+                </div>
+        </div>
+        <!-- FIN BODY Cuerpo de pagina -->
+
+    </div>
+    <script>
+        function validarUsuario() {
+            var usuario = document.getElementById("correo").value;
+            var contrasena = document.getElementById("contrasenia").value;
+    
+            $.post('//', {usuario: correo, contrasena: contrasenia}, function(data) {
+                var resultadoDiv = document.getElementById("resultado");
+                resultadoDiv.innerHTML = data.mensaje;
+            });
+        }
+    </script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    {% endblock contenido_login %}
+</body>
+
+</html>

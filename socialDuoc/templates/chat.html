@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+{% load static %}
+<!-- ESTILO CSS -->
+{% block css %}
+<link rel="stylesheet" href="{% static '/css/style_chat.css' %}">
+{% endblock css %}
+
+
+{% block contenido %}
+
+<!-- CARTA DE CHAT -->
+<div class="button-container">
+    
+
+</div>
+<div class="flex chat">
+    <aside id="separator-sidebar"
+    class="top-0 left-0 z-40 w-64 transition-transform -translate-x-full sm:translate-x-0"
+    aria-label="Sidebar">
+    <div class="h-full px-3 py-4 overflow-y-auto bg-gray-50 dark:bg-gray-800">
+        <div class="seccion-lista-usuarios">
+            
+            <ul class="space-y-2 font-medium">
+                <h3 class="flex items-center">
+                    <i class="fa fa-comments mr-2 fa-2x" aria-hidden="true"></i>
+                    <p>Tus chats</p>
+                </h3>
+                <div class="flex md:order-6">
+                    <div class="relative xl:block sm:hidden md:flex sm:hidden">
+                        <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                    stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+                            </svg>
+                            <span class="sr-only">Search icon</span>
+                        </div>
+                        
+                        <input type="text" name="buscador" id="buscador" value="{{ search_query }}"
+                            class="block w-full p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-full bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 sm:block"
+                            placeholder="Buscar usuario...">
+                    </div>
+                    </button>
+                </div>
+                {% for chat in chats %}
+                    
+                    <li class="buscar-usuarios">
+                        <div class="usuario m-2" data-usuario-id="{{ chat.id_receptor }}" style="cursor: pointer;">
+                            <div class="avatar">
+                                {% if chat.foto == '0' %}
+                                <img class="avatar" src="{% static '/img/user.jpg' %}" alt="img">
+                                <input class="foto" value="{% static '/img/user.jpg' %}" hidden>
+                                {% elif chat.tipo == 2  %}
+                                <img class="avatar" src="{% static '/img/seccion.jpg' %}" alt="img">
+                                <input class="foto" value="{% static '/img/seccion.jpg' %}" hidden>
+                                {% else %}
+                                <img class="avatar" src="data:image/png;base64, {{ chat.foto }}" alt="img">
+                                <input class="foto" value="data:image/png;base64, {{ chat.foto }}" hidden>
+                                {% endif %}
+                            </div>
+                            <div class="cuerpo">
+                                <span class="text-sm"> {{ chat.nombre_receptor }}</span>
+                            </div>
+                            <input type="text" class="chat-id" id="chat-id" value="{{ chat.id_chat }}" hidden>
+                            <input type="text" class="nombre" id="nombre" value="{{ chat.nombre_receptor }}" hidden>
+                            <input type="text" class="chat-Tipo" id="chat-Tipo" value="{{ chat.tipo }}" hidden>
+                            
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </aside>
+
+    <section class="body-chat scale-up-center">
+        <!-- MENSAJES-->
+        <div class="seccion-chat">
+            <div class="usuario-seleccionado">
+                <!-- NOMBRE DE USUARIO QUE SE HABLA -->
+                <div class="avatar">
+                    <img src="{% static '/img/user.jpg' %}" alt="img" id="foto">
+                </div>
+                <div class="cuerpo text-sm" id="titulo_nombre" style="width: 120px;">
+                    CHAT
+                </div>
+                <button data-drawer-target="separator-sidebar" data-drawer-toggle="separator-sidebar"
+                aria-controls="separator-sidebar" type="button" style="background-color: rgb(255, 196, 0);"
+                class="inline-flex items-center p-2 mt-2 ms-3 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
+                <span class="sr-only">Open sidebar</span>
+                <i class="fa fa-comments mr-2 fa-2x" aria-hidden="true"></i>
+                <p class="m-2 text-xs">Chats</p>
+            </button>
+            </div>
+
+            <div class="panel-chat">
+                <div class="texto" id="mensajes">{{ mensaje.mensaje }}</div>
+            </div>
+            <!-- SECCION DE ESCRITURA DEL CHAT -->
+
+
+            <form class=" flex" id="msgForm" method="post" action="{% url 'enviar_mensaje' %}">
+                {% csrf_token %}
+                <input type="text" name="chatIdInput" id="chatIdInput" hidden>
+                <input type="text" name="id_usuario" id="id_usuario" value="{{user.id}}" hidden>
+                <input type="text" name="id_usuario_recep" id="id_usuario_recep" hidden>
+                <input type="text" name="tipo"  id="tipo" hidden>
+                <div class="w-full flex">
+                    <input
+                        class="w-full p-4 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        name="mensaje" placeholder="Escribir mensaje" id="mensaje" required>
+                    <button type="submit" class="enviar p-4 ml-2 bg-blue-500 text-white rounded-lg">
+                        <i class="fa fa-paper-plane mr-2 fa-2x" aria-hidden="true"></i>
+                    </button>
+                </div>
+            </form>
+
+        </div>
+    </section>
+</div>
+<script src="{% static '/js/chat.js' %}"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>.
+
+
+<style>
+    .seccion-chat {
+        max-width: 100%;
+        width: 100%;
+    }
+</style>
+
+<script>
+Swal.fire({
+  title: "Atencion!!!",
+  text: "Cuando crees un nuevo chat o accedas a uno existente, asegúrate de seleccionarlo en el lateral de búsqueda.",
+  icon: "info"
+});
+</script>
+
+{% endblock contenido %}

@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load static %}
+    <!-- ESTILO CSS -->
+    {% block css %}
+    <link rel="stylesheet" href="{% static '/css/style-404.css' %}">
+    {% endblock css %}
+
+    {% block contenido %}
+    <section class="seccion-pagina-404 scale-up-center">
+        <div class="numero-error">
+            <div class="contenedor-msj">
+                <h3>404</h3>
+            </div>
+        </div>
+        <!-- SECCION MENSAJE ERROR 404 -->
+        <div class="contenido-error">
+            <title>Pagina Error 404</title>
+            <div class="seccion-contenedor">
+                <h1>¡Lo siento!</h1>
+                <p class="text-2xl text-gray-800 font-extrabold">La Pagina que esta solicitando no se ha podido encontrar o no tienes acceso.</p>
+            </div>
+            <div class="seccion-contenedor">
+                <div class="botones-escape">
+                    <a href="{% url 'HOME' %}">
+                    <button type="button"
+                        class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2 "
+                        style="margin-top: 35px;">
+                        Ir a Inicio
+                    </button>
+                </a>
+                </div>
+            </div>
+        </div>
+    </section>
+    {% endblock contenido %}

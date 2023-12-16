@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+{% load static %}
+<!-- ESTILO CSS -->
+{% block css %}
+
+{% endblock css %}
+
+{% block contenido %}
+
+<div class="items-center scale-up-ver-top">
+    <div class="w-11/12 sm:p-8 flex m-4 justify-center">
+        <div class="h-auto max-w-xl bg-white p-4 rounded-lg" style="min-width: 50%;">
+
+            <div class="flex justify-center justify-between items-center p-2 px-2 py-2">
+                <a href="{% url 'seccion_crear' %}">
+                    <button type="button" class="text-white bg-blue-700 hover:bg-blue-800 rounded-lg px-3 py-2">Crear</button>
+                </a>
+                <input type="text" name="buscador" id="buscador" placeholder="Buscar" class="rounded-xl border-gray-300">
+            </div>
+            <ul class="mt-2">
+                {% for carrera in carreras %}
+                <li class="carrera">
+                    <div id="accordion-nested-parent" data-accordion="collapse" class="rounded-lg mb-2">
+                        <!--ACORDION-->
+                        <h2 id="accordion-collapse-heading-{{carrera.id_carrera}}" class="marco">
+                            <button type="button"
+                                class="flex items-center justify-between w-full p-5 font-medium rtl:text-right rounded-xl"
+                                data-accordion-target="#accordion-collapse-body-{{carrera.id_carrera}}">
+                                <span>{{carrera.nombre}}</span>
+                                <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0" aria-hidden="true"
+                                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                        stroke-width="2" d="M9 5 5 1 1 5" />
+                                </svg>
+                            </button>
+                        </h2>
+                        <div id="accordion-collapse-body-{{carrera.id_carrera}}"
+                            class="hidden p-5 rounded-lg bg-white"
+                            aria-labelledby="accordion-collapse-heading-{{carrera.id_carrera}}"
+                            style="border: solid; border-color: rgb(235, 235, 235); border-radius: 15px;">
+                            <!-- New Nested accordion for the second accordion -->
+                            <div id="nested-accordion-for-second" data-accordion="collapse">
+                                <p>Ramos:</p>
+
+                                {% for ramo in ramos %}
+                                {% if ramo.id_carrera == carrera.id_carrera %}
+                                <h2 id="nested-accordion-heading-{{carrera.id_carrera}}" class="mb-2 marco ramo">
+                                    <button type="button"
+                                        class="flex items-center justify-between w-full p-5 rounded-xl font-medium rtl:text-right "
+                                        data-accordion-target="#nested-accordion-body-{{ramo.id_ramo}}">
+                                        <span>{{ramo.nombre}}</span>
+                                        <svg data-accordion-icon class="w-3 h-3 rotate-180 shrink-0" aria-hidden="true"
+                                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                                stroke-width="2" d="M9 5 5 1 1 5" />
+                                        </svg>
+                                    </button>
+                                </h2>
+
+                                <div id="nested-accordion-body-{{ramo.id_ramo}}" class="hidden mb-2 rounded-lg pl-2"
+                                    aria-labelledby="nested-accordion-heading-{{ramo.id_ramo}}">
+                                    <div>
+                                        <div class="p-4 border-solid border-2"
+                                            style="border: solid; border-color: rgb(235, 235, 235); border-radius: 15px;">
+                                            <p>Secciones:</p>
+                                            {% for seccion in secciones %}
+                                            {% if seccion.id_ramo == ramo.id_ramo %}
+
+                                            <ul class="flex-1 w-full">
+                                                <li>
+                                                    <div class="flex items-center space-x-4 rtl:space-x-reverse">
+                                                        <div class="flex-shrink-0">
+                                                            <img class="w-9 h-9 rounded-full"
+                                                                src="{% static '/img/seccion.jpg' %}">
+                                                        </div>
+                                                        <div class="flex-1 min-w-0">
+                                                            <p
+                                                                class="text-sm font-medium text-gray-900 truncate dark:text-white">
+                                                                {{seccion.nombre}}
+                                                            </p>
+                                                            <p
+                                                                class="text-sm text-gray-500 truncate dark:text-gray-400">
+                                                                {{ramo.nombre}}
+                                                            </p>
+                                                        </div>
+                                                        <a href="{% url 'seccion_modificar' seccion.id_seccion %}">
+                                                            <button type="button"
+                                                                class="text-sm text-white bg-blue-700 hover:bg-blue-800 rounded-lg px-2 py-2 mt-4">Modificar</button>
+                                                        </a>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                            {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {% endif %}
+                                {% endfor %}
+
+                                <!-- Add more nested questions if needed -->
+                            </div>
+                            <!-- End: New Nested accordion for the second accordion -->
+                        </div>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+
+        </div>
+    </div>
+</div>
+
+
+
+<style>
+    .marco {
+        border: solid;
+        border-color: rgb(235, 235, 235);
+        border-radius: 15px;
+    }
+
+    .cuerpo {
+        border: solid;
+        border-color: darkgoldenrod;
+    }
+</style>
+<script>
+    document.addEventListener("keyup", e => {
+
+        if (e.target.matches("#buscador")) {
+
+            document.querySelectorAll(".carrera").forEach(elemento => {
+                elemento.innerText.toLowerCase().includes(e.target.value.toLowerCase())
+                    ? elemento.classList.remove("hidden")
+                    : elemento.classList.add("hidden");
+            });
+
+        }
+    })
+</script>
+{% endblock contenido %}

@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% load static %}
+<!-- ESTILO CSS -->
+{% block css %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+{% endblock css %}
+
+{% block contenido %}
+<div class="flex items-center justify-center mt-8 scale-up-center">
+    <div class="w-11/12 sm:p-8 bg-white m-4 rounded-lg">
+        <div class="h-auto max-w-xl p-4">
+            <div>
+                <!--Inicio Titulo-->
+                <div class="relative z-0 w-full mb-6 group">
+                    <p class="text-2xl font-bold dark:text-white">Agregar seccion nueva</p>
+                </div>
+            </div>
+            <!--Fin Titulo-->
+            <!--Inicio espacio tabla-->
+            <div class="justify-center rounded dark:bg-gray-800">
+                <!--Usuario-->
+                <input type="text" name="id" value="" style="display: none;">
+                <label for="name" class="block mb-2 text-sm font-medium dark:text-white">Rellene los campos</label>
+
+                <div class="relative">
+                    <form action="{% url 'form_seccion_crear' %}" class="agregar_seccion" id="agregar_seccion"
+                        method="post">
+                        {% csrf_token %}
+
+                        <label for="name" class="block font-medium dark:text-white">Carreras</label>
+                        <p id="requerido_carrera" class="campo-requerido text-red-500 text-sm">Campo requerido carrera
+                        </p>
+                        <select id="select_carrera" name="id_carrera" class="select2 w-full">
+                            <option value="" selected disabled>Selecciona una carrera</option>
+
+                            {% for carrera in carreras %}
+
+                            <option value="{{carrera.id_carrera}}">{{carrera.nombre}}</option>
+
+                            {% endfor %}
+
+                        </select>
+
+
+                        <label for="name" class="block mt-2 font-medium dark:text-white">Ramos</label>
+                        <p id="requerido_ramo" class="campo-requerido text-red-500 text-sm" style="display: none;">Campo
+                            requerido ramo </p>
+
+                        <select id="select_ramo" name="id_ramo" class="select2 w-full" disabled>
+                            <option value="" selected disabled>Selecciona un ramo</option>
+
+                            {% for ramo in ramos %}
+
+
+                            <option value="{{ramo.id_ramo}}" data-id-carrera="{{ramo.id_carrera}}">{{ramo.nombre}}
+                            </option>
+
+
+                            {% endfor %}
+
+                        </select>
+
+                        <label for="name" class="block mt-2  font-medium dark:text-white">Nombre de la
+                            seccion</label>
+
+                        <input type="text" class="rounded-lg w-full" id="nombre_seccion" name="nombre_seccion" required
+                            minlength="3" maxlength="9" placeholder="Nombre " disabled>
+
+                        <div id="button_wrapper mt-2">
+                            <p id="incompleto" class="text-sm text-red-500 ">Formulario incompleto</p>
+                            <button type="submit" id="boton_crear"
+                                class="text-white bg-blue-600 rounded-lg p-2 hover:bg-blue-900 w-full mt-2"
+                                disabled>Crear
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    @media (max-width: 700px) {
+        .correo-hidden {
+            display: none;
+        }
+    }
+</style>
+
+
+<script src="{% static '/js/seccion_crear.js' %}"></script>
+<script>
+    var ramos = {{ ramos| safe }};
+</script>
+
+{% endblock contenido %}

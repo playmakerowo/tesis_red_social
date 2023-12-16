@@ -1,0 +1,263 @@
+{% extends "base_admin.html" %}
+{% load static %}
+
+{% block titulo_admin %}
+
+<title>Modificar Eventos</title>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- Incluye Select2 CSS -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+
+<!-- Incluye Select2 JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+
+{% endblock titulo_admin %}
+
+{% block contenido_admin %}
+
+<div class="p-4 sm:ml-64">
+    <div class="p-4 border-gray-200 border-dashed rounded-lg dark:border-gray-700" id="carta">
+        <div style="display: flex; justify-content: start;">
+            <a href="{% url 'ADM_EVE' %}" class="btn btn-primary">
+                <button class="m-4">
+                    <svg class="w-8 h-8 text-gray-800 dark:text-white" aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 8 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M7 1 1.3 6.326a.91.91 0 0 0 0 1.348L7 13" />
+                    </svg>
+                </button>
+            </a>
+
+            <!--Inicio Titulo-->
+            <div class="relative z-0 w-full mb-6 group">
+                <p class="text-2xl font-bold dark:text-white m-4">Modificar Evento</p>
+            </div>
+        </div>
+        <!--Fin Titulo-->
+        <!--Inicio espacio tabla-->
+        {% for eve in evento %}
+
+
+        <div class="justify-center rounded dark:bg-gray-800">
+            <!--Inico Formulario-->
+            <form method="post" action="{% url 'MOD_EVE' %}">
+                {% csrf_token %}
+                <!--Usuario-->
+                <input type="text" name="id" value="{{eve.0}}" style="display: none;">
+                <div class="relative z-0 w-full mb-6 group">
+                    <p class="text-m font-bold dark:text-white">Usuario Publicador</p>
+                </div>
+                <div class="relative z-0 w-full mb-6 group">
+                    <div class="grid gap-6 mb-6 md:grid-cols-3">
+                        <div>
+                            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nombre
+                                Publicador</label>
+                            <input type="text" id=""
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                placeholder="" value="{{eve.6}} {{eve.7}}" disabled>
+                        </div>
+                        <div>
+                            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Correo</label>
+                            <input type="text" id=""
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                placeholder="" value="{{eve.8}}" disabled>
+                        </div>
+                        <div>
+                            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tipo de
+                                Usuario</label>
+                            <input type="text" id=""
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                placeholder="" value="{{eve.10}}" disabled>
+                        </div>
+                    </div>
+                </div>
+                <!--Input titulo-->
+                <div class="relative z-0 w-full mb-6 group">
+                    <p class="text-m font-bold dark:text-white">Informacion evento</p>
+                </div>
+                <div class="relative z-0 w-full mb-6 group">
+                    <input name="nombre" id=""
+                        class="block py-2.5 px-0 w-full text-sm  bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
+                        required value="{{ eve.2 }}" maxlength="100" />
+                    <label
+                        class="peer-focus:font-medium absolute text-sm  dark:text-white duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Titulo
+                        evento</label>
+                </div>
+                <!-- Agregar invitados -->
+                <div class="sm:col-span-2">
+                    <label class="block mb-2 text-sm font-medium  dark:text-white">Participantes por tipo</label>
+                    <select id="" name="tipos"
+                        class="blockp-2 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        <option value="" disabled selected>Selecciona un tipo usuarios</option>
+                        {% for tipo in tipos_usuario %}
+
+                        <option value="{{ tipo.0 }}">{{tipo.1}}</option>
+
+                        {% endfor %}
+                    </select>
+                    <button type="submit" name="accion" value="agregar_tipo"
+                        class="flex inline-flex items-center px-4 py-1 text-sm font-medium text-white bg-blue-700 rounded-lg right-2 bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium">
+                        <i class="fa fa-user-plus fa-xs mr-2"></i>Añadir</button>
+                    <!--USUARIOS-->
+                </div>
+                <!--Usuario-->
+                <input type="text" name="id" value="{{eve.0}}" style="display: none;">
+                <label for="name" class="block mb-2 text-sm font-medium dark:text-white">Agregar
+                    participante adicional</label>
+                <div class="relative">
+                    <select id="select_usuarios" name="usuarios" class="select2">
+                        <option value="" disabled selected>Selecciona un usuario</option>
+                        {% for user in usuarios %}
+
+                        <option value="{{ user.0 }}">{{user.2}} {{user.3}} ~ {{user.4}}</option>
+
+                        {% endfor %}
+                    </select>
+
+                    <button type="submit" name="accion" value="agregar"
+                        class="flex inline-flex items-center px-4 py-1 text-sm font-medium text-white bg-blue-700 rounded-lg right-2 bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium">
+                        <i class="fa fa-user-plus fa-xs mr-2"></i>Añadir</button>
+                </div>
+
+                <!--Participantes-->
+                <div class="relative z-0 w-full mb-2 group">
+                    <p class="text-m font-bold dark:text-white mt-4">Participantes actuales</p>
+                </div>
+                <div class="w-auto h-14 bg-gray-900 rounded-t-lg">
+                    <div class=" absolute z-10 w-auto">
+                        <input type="text" name="buscador" id="buscador" placeholder="Buscar" class="rounded-lg m-2">
+                    </div>
+                </div>
+                <div class="text-gray-900 bg-gray-900 font-medium rounded-b-lg px-5 text-center"
+                    style="max-height: 160px; overflow-y: auto; height: 400px; max-height: 400px;">
+                    <ul>
+                        {% for par in participantes %}
+                        <li class="participante inline-block">
+                            <div style="display: inline-block; border: 3px solid steelblue; border-radius: 15px;"
+                                class="mt-2">
+                                <a href="{% url 'adm_modificar_usuario' par.4 %}">
+                                    <button type="button"
+                                        class="text-white m-2 bg-gradient-to-r from-green-400 to-blue-600 font-medium rounded-lg text-sm px-5 py-1.5 text-center mr-2 mb-2">{{par.2}}
+                                        {{ par.3 }} ~ {{ par.5 }}</button>
+                                </a>
+                                <button type="button" accion="eliminar"
+                                    class="text-white m-2 bg-gradient-to-r from-red-400 to-red-600 font-medium rounded-lg px-2 py-1 text-center delete-participante-btn"
+                                    data-participante-id="{{ par.4 }}" data-evento-id="{{ eve.0 }}">
+                                    <i class="fa fa-trash" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <!--Input Descripcion-->
+                <div class="relative z-0 w-full mb-6 mt-4 group">
+                    <label class="block mb-2 text-sm font-medium  dark:text-white">Descripción</label>
+                    <textarea id="" rows="4" name="descrip" maxlength="1500"
+                        class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        placeholder="Descripcion..." required>{{ eve.4 }}</textarea>
+                </div>
+                <!--Titulo Estado-->
+                <div class="relative z-0 w-full m-2  group">
+                    <p class="text-lg font-normal  dark:text-white">Estado</p>
+                </div>
+                <!--Input Estado-->
+                <label class="relative inline-flex items-center cursor-pointer">
+                    {% if eve.5 == 1 %}
+                    <input type="checkbox" name="estado" class="sr-only peer" checked value="1">
+                    {% else %}
+                    <input type="checkbox" name="estado" class="sr-only peer" value="1">
+                    {% endif %}
+                    <div
+                        class="w-14 h-7 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600">
+                    </div>
+                    <span class="ml-3" style="color: black">Inactivo / Activo</span>
+                </label>
+                <!--Fechas-->
+                <div class="relative z-0 w-full m-2 group">
+                    <p class="text-lg font-normal  dark:text-white">Fecha de evento</p>
+                </div>
+                <div class="relative z-0 w-full m-2 group ">
+                    <div date-rangepicker class="flex items-center">
+                        <!--Fecha Inicio-->
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                                    xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                    <path
+                                        d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
+                                </svg>
+                            </div>
+                            <input name="inicio" type="text"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                placeholder="Fecha de inicio" value="{{ eve.3 }}">
+                        </div>
+                        <span class="mx-4" style="color: black;">Hasta</span>
+                        <!--Fecha Final-->
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                                    xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                    <path
+                                        d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
+                                </svg>
+                            </div>
+                            <input name="fin" type="text"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                placeholder="Fecha de termino" value="{{ eve.11 }}">
+                        </div>
+                    </div>
+                </div>
+                <!--Boton de Modificar-->
+                <button type="submit" name="accion" value="modificar"
+                    class="mt-4 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Modificar</button>
+            </form>
+            {% if messages %}
+            <ul class="messages pt-4">
+                {% for message in messages %}
+                <li {% if message.tags %} class="{{ message.tags }}" {% endif %} id="">{{ message }}</li>
+                <input type="text" name="mensaje" id="mensaje" value="{{ message }}" hidden>
+                {% endfor %}
+            </ul>
+            {% endif %}
+
+            <!--Fin Formulario-->
+        </div>
+        {% endfor %}
+        <!--Fin espacio tabla-->
+    </div>
+</div>
+
+{% endblock contenido_admin %}
+
+{% block js_admin %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/1.8.1/datepicker.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $('#select_usuarios').select2();
+    });
+</script>
+<script src="{% static '/js/a_modificar_evento.js' %}"></script>
+
+
+
+<style>
+    /* Aplica un color de texto negro al input del campo de selección de Select2 */
+    .select2-container .select2-selection--single .select2-selection__rendered,
+    .select2-container .select2-search--dropdown .select2-search__field {
+        color: black !important;
+    }
+
+    .select2-results li {
+        color: black !important;
+    }
+
+    .select2-search__field {
+        color: black !important;
+    }
+</style>
+
+{% endblock js_admin %}

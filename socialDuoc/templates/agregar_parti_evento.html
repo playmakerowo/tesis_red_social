@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block css %}
+<!-- JS CREAR EVENTO -->
+<LINK REL=StyleSheet HREF="{% static '/js/crearEvento.js" TYPE="text/js' %}" MEDIA=screen>
+
+
+{% endblock css %}
+
+{% block contenido %}
+<section class=" dark:bg-gray-900 flex justify-center items-center min-h-screen"
+    style="margin-top: 100px;margin-bottom: 50px;">
+    <div class="w-full max-w-xl p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700">
+            <div class="py-8 px-4 mx-auto max-w-2xl lg:py-16">
+                <p class="m-6 p-0 flex justify-center items-center text-4xl font-bold text-gray-900 dark:text-white">
+                    Agregar los Participantes al Evento</p>
+            </div>
+            <form action="{% url 'CREA_EVE' user.id %}" method="post">
+                {% csrf_token %}
+                <div class="m-4 p-0">
+                    {% for eve in evento %}
+                    {% if eve.6 == 41 %}
+                    
+                    <div class="sm:col-span-2">
+                        <label class="block mb-2 text-sm font-medium  dark:text-white">Participantes por tipo</label>
+                        <select id="" name="tipos"
+                            class="blockp-2 mb-6 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            <option value="" disabled selected>Selecciona un tipo usuarios</option>
+                            {% for tipo in tipos_usuario %}
+    
+                            <option value="{{ tipo.0 }}">{{tipo.1}}</option>
+    
+                            {% endfor %}
+                        </select>
+                        <button type="submit" name="accion" value="agregar_tipo"
+                            class="flex inline-flex items-center px-4 py-1 text-sm font-medium text-white bg-blue-700 rounded-lg right-2 bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium"><svg
+                                class="w-3 h-3 mr-1.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                fill="currentColor" viewBox="0 0 20 18">
+                                <path
+                                    d="M6.5 9a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9ZM8 10H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5Zm11-3h-2V5a1 1 0 0 0-2 0v2h-2a1 1 0 1 0 0 2h2v2a1 1 0 0 0 2 0V9h2a1 1 0 1 0 0-2Z" />
+                            </svg>Añadir</button>
+                        <!--USUARIOS-->
+    
+                    </div>
+                    <!--Usuario-->
+                    <input type="text" name="id" style="display: none;">
+                    <label for="name" class="block mb-2 text-sm font-medium dark:text-white">Agregar
+                        participante Individual</label>
+                    <div class="relative">
+                        <select id="select_usuarios" name="usuarios" class="select2">
+                            <option value="" disabled selected>Selecciona un usuario</option>
+                            {% for user in usuarios %}
+    
+                            <option value="{{ user.0 }}">{{user.2}} {{user.3}} ~ {{user.4}}</option>
+    
+                            {% endfor %}
+                        </select>
+    
+                        <button type="submit" name="accion" value="agregar"
+                            class="flex inline-flex items-center px-4 py-1 text-sm font-medium text-white bg-blue-700 rounded-lg right-2 bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium"><svg
+                                class="w-3 h-3 mr-1.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                fill="currentColor" viewBox="0 0 20 18">
+                                <path
+                                    d="M6.5 9a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9ZM8 10H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5Zm11-3h-2V5a1 1 0 0 0-2 0v2h-2a1 1 0 1 0 0 2h2v2a1 1 0 0 0 2 0V9h2a1 1 0 1 0 0-2Z" />
+                            </svg>Añadir</button>
+                    </div>
+                    <!--Participantes-->
+                    <div class="relative z-0 w-full mb-2 group">
+                        <p class="text-m font-bold dark:text-white mt-4">Participantes actuales</p>
+                    </div>
+                    <div class="text-gray-900 bg-gray-900 font-medium rounded-lg px-5 text-center mt-2">
+                        {% for par in participantes %}
+                        <div style="display: inline-block; border: 3px solid steelblue; border-radius: 15px;" class="m-2">
+                            <a href="{% url 'adm_modificar_usuario' par.4 %}">
+                                <button type="button"
+                                    class="text-white m-2 bg-gradient-to-r from-green-400 to-blue-600 font-medium rounded-lg text-sm px-5 py-1.5 text-center mr-2 mb-2">{{par.2}}
+                                    {{ par.3 }} ~ {{ par.5 }}</button>
+                            </a>
+                            <button type="submit" name="accion" value="eliminar_{{ par.4 }}"
+                                class="text-white m-2 bg-gradient-to-r from-red-400 to-red-600 font-medium rounded-lg px-2 py-1 text-center">
+                                <svg class="w-auto h-4" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
+                                    viewBox="0 0 18 20">
+                                    <path
+                                        d="M17 4h-4V2a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v2H1a1 1 0 0 0 0 2h1v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V6h1a1 1 0 1 0 0-2ZM7 2h4v2H7V2Zm1 14a1 1 0 1 1-2 0V8a1 1 0 0 1 2 0v8Zm4 0a1 1 0 0 1-2 0V8a1 1 0 0 1 2 0v8Z" />
+                                </svg>
+                            </button>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Boton para agregar evento -->
+                <div class="flex justify-center items-center mt-4 space-x-3 md:mt-6">
+                    <button type="submit"
+                        class="text-white justify-cente flex items-center bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">
+                        Publicar</button>
+                        <a href="{% url 'HOME' %}">
+                            <button type="button"
+                                class="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">Cancelar</button>
+                        </a>
+                </div>
+                {% endif %}
+                {% endfor %}
+            </form>
+    </div>
+</section>
+{% endblock contenido %}

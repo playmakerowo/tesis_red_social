@@ -1,0 +1,9 @@
+.paginate_button {
+    color: rgb(151, 119, 45) !important;
+    background-color: rgb(255, 174, 0) !important;
+    border-radius: 5px !important;
+}
+
+.dt-button {
+    background-color: rgb(255, 174, 0) !important;
+}
